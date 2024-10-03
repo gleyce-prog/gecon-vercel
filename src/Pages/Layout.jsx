@@ -20,7 +20,7 @@ const Layout = ({ ...props }) => {
   return (
     <>
       <div id="main-wrapper" className="show">
-        <Preloader />
+        {/* <Preloader /> */}
         <Header props={JWT_TOKEN?.sub} />
         <Menu props={JWT_TOKEN?.menu} />
         <MainLayout props={props.title}>{props.children}</MainLayout>

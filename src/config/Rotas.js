@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import {useRoutes } from 'react-router-dom';
+import { Navigate, useRoutes } from 'react-router-dom';
 import Login from '../Pages/Login.jsx';
 import Listar_Usuario from '../Pages/Usuário/Listar.jsx';
 import Listar_Cliente from '../Pages/Cliente/Listar.jsx';
@@ -35,7 +35,7 @@ export const routes = [
     {
         path: "/home",
         element: <Layout children={<Home />} title={'Home'} />,
-        type: "logged",
+        type: "public",
         css: [],
         script: []
     },
