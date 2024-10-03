@@ -38,7 +38,7 @@ export default function Buttons({ dado, type, rota, title, onClick }) {
     } else if (type === 'pesquisar') {
         return (
             <div onClick={onClick}>
-                <Button href="#" className="btn btn-primary shadow btn-xs sharp me-1">
+                <Button className="btn btn-primary shadow btn-xs sharp me-1">
                     <i className="fas fa-pencil-alt"></i>
                 </Button>
             </div>
