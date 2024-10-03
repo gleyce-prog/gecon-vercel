@@ -2,7 +2,7 @@
   "name": "gecon",
   "version": "0.1.0",
   "private": true,
-  "homepage": ".",
+  "homepage": "https://gleyce-prog.github.io/gecon-vercel/",
   "dependencies": {
     "@popperjs/core": "^2.11.6",
     "@testing-library/jest-dom": "^5.17.0",
@@ -13,6 +13,7 @@
     "datatables.net": "^2.0.8",
     "datatables.net-bs4": "^2.0.8",
     "datatables.net-bs5": "^2.0.8",
+    "gh-pages": "^6.1.1",
     "http-proxy-middleware": "^3.0.0",
     "jquery": "^3.7.1",
     "json-server": "^1.0.0-beta.1",
@@ -35,6 +36,8 @@
   },
   "scripts": {
     "start": "set PORT=8080 && react-scripts start",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
