@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/gleyce-prog/gecon-vercel/static/css/main.252ad94b.css",
-    "main.js": "/gleyce-prog/gecon-vercel/static/js/main.7086e8fd.js",
+    "main.js": "/gleyce-prog/gecon-vercel/static/js/main.09f4368a.js",
     "static/media/fa-solid-900.ttf": "/gleyce-prog/gecon-vercel/static/media/fa-solid-900.ea6ccb0dc20e72ccb923.ttf",
     "static/media/fa-brands-400.ttf": "/gleyce-prog/gecon-vercel/static/media/fa-brands-400.a7bf6b7759f86ac8ab22.ttf",
     "static/media/fa-solid-900.woff2": "/gleyce-prog/gecon-vercel/static/media/fa-solid-900.9451d5fee89b51a20f8a.woff2",
@@ -12,10 +12,10 @@
     "static/media/fa-v4compatibility.woff2": "/gleyce-prog/gecon-vercel/static/media/fa-v4compatibility.b05ede14f2293a48a0fe.woff2",
     "index.html": "/gleyce-prog/gecon-vercel/index.html",
     "main.252ad94b.css.map": "/gleyce-prog/gecon-vercel/static/css/main.252ad94b.css.map",
-    "main.7086e8fd.js.map": "/gleyce-prog/gecon-vercel/static/js/main.7086e8fd.js.map"
+    "main.09f4368a.js.map": "/gleyce-prog/gecon-vercel/static/js/main.09f4368a.js.map"
   },
   "entrypoints": [
     "static/css/main.252ad94b.css",
-    "static/js/main.7086e8fd.js"
+    "static/js/main.09f4368a.js"
   ]
 }
