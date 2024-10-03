@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react';
 import { Navigate, useRoutes } from 'react-router-dom';
-import login from '../Pages/Login.jsx';
-import listarUsuario from '../Pages/Usuário/Listar.jsx';
-import listarCliente from '../Pages/Cliente/Listar.jsx';
+import Login from '../Pages/Login.jsx';
+import ListarUsuario from '../Pages/Usuário/Listar.jsx';
+import ListarCliente from '../Pages/Cliente/Listar.jsx';
 import { Styles, Scripts } from '../utils/Style.js';
-import layout from '../Pages/Layout.jsx';
-import alterarSenha from '../Pages/Alterar_senha.jsx';
-import paginaErro from '../Pages/Erro/Pagina_nao_encontrada.jsx';
-import home from '../Components/Comum/Dashboard.jsx';
+import Layout from '../Pages/Layout.jsx';
+import AlterarSenha from '../Pages/Alterar_senha.jsx';
+import PaginaErro from '../Pages/Erro/Pagina_nao_encontrada.jsx';
+import Home from '../Components/Comum/Dashboard.jsx';
 
 const addCssLink = (href) => {
     const link = document.createElement('link');
@@ -27,33 +27,33 @@ const addScripts = (src) => {
 export const routes = [
     {
         path: "/login",
-        element: <login rota={"/home"}/>,
+        element: <Login rota={"/home"}/>,
         type: "public",
         css: [Styles.login],
         script: [Scripts.modal_jquery, Scripts.modal_bootstrap]
     },
     {
         path: "/home",
-        element: <layout children={<home />} title={'Home'} />,
+        element: <Layout children={<Home />} title={'Home'} />,
         type: "public",
         css: [],
         script: []
     },
     {
         path: "/nova-senha",
-        element: <alterarSenha rota={"/login"}/>,
+        element: <AlterarSenha rota={"/login"}/>,
         type: "public",
         css: [],
     },
     {
         path: "/pagina-nao-encontrada",
-    element: <paginaErro rota={"/login"}/>,
+    element: <PaginaErro rota={"/login"}/>,
         type: "public",
         css: [],
     },
     {
         path: "/usuario",
-        element: <layout children={<listarUsuario />} title={'Usuários'} />,
+        element: <Layout children={<ListarUsuario />} title={'Usuários'} />,
         type: "public",
         key: 1,
         css: [],
@@ -90,7 +90,7 @@ export const routes = [
     },
     {
         path: "/cliente",
-        element: <layout children={<listarCliente />} title={'Usuários'} />,
+        element: <Layout children={<ListarCliente />} title={'Usuários'} />,
         type: "protected",
         key: 2,
         css: [],
