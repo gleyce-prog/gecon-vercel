@@ -1,12 +1,13 @@
 import HandleLogout from '../utils/Logout';
 import { useState, useEffect } from "react";
 import { getCookie, setCookie } from "../utils/Cookies";
+import { useNavigate } from 'react-router-dom';
 export default function Header({ props }) {
   const logout = () => {
     HandleLogout();
   }
   const [theme, setTheme] = useState(getCookie('theme'));
-
+  
   const toggleTheme = () => {
     const newTheme = theme === 'light' ? 'dark' : 'light';
     setTheme(newTheme);
@@ -19,15 +20,13 @@ export default function Header({ props }) {
 
     document.body.setAttribute('data-theme-version', theme);
   }, [theme]);
+
   return (
     <div>
       <div className="nav-header">
         <a href="/dashboard" className="brand-logo">
-
-          <img className="logo-abbr" src="../images/logo/Símbolo Principal.png" alt="" srcSet="" width={39}
-            height={23} />
-          <img className="brand-title" src="../images/logo/Logotipo Negativo 01.png" width={100}
-            height={20} />
+          <img className="logo-abbr" src="/painel/images/logo/Símbolo Principal.png" alt="" srcSet="" width={39} height={23} />
+          <img className="brand-title" src="/painel/images/logo/Logotipo Negativo 01.png" width={100} height={20} />
         </a>
         <div className="nav-control">
           <div className="hamburger">
@@ -45,20 +44,12 @@ export default function Header({ props }) {
               </div>
               <ul className="navbar-nav header-right">
                 <li className="nav-item dropdown notification_dropdown">
-                  <a
-                    className="nav-link"
-                    href=""
-                    data-bs-toggle="dropdown"
-                    onClick={toggleTheme}
-                  >
+                  <a className="nav-link" data-bs-toggle="dropdown" onClick={toggleTheme}>
                     <i className={`fa-regular fa-${theme === 'dark' ? 'sun' : 'moon'}`} style={{ color: theme === 'black' ? '#fff' : '#f0f0f0' }} />
                   </a>
                 </li>
                 <li className="nav-item dropdown notification_dropdown">
-                  <a
-                    className="nav-link bell dz-fullscreen"
-                    href="javascript:void(0)"
-                  >
+                  <a className="nav-link bell dz-fullscreen">
                     <i className="fas fa-expand" style={{ color: "#FFFFFF" }} />
                   </a>
                 </li>
@@ -86,6 +77,7 @@ export default function Header({ props }) {
                           <a
                             className="dropdown-item ai-icon"
                             onClick={logout}
+                          
                           >
                             <i className="fas fa-sign-out-alt" style={{ color: "#ff7979" }} />
                             <span className="ms-2 text-danger" >Logout </span>

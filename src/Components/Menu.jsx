@@ -1,28 +1,27 @@
 import React, { useMemo } from 'react';
 import { getCookie } from '../utils/Cookies';
+import { Link, Navigate } from 'react-router-dom';
 const Menu = ({ props = [] }) => {
   const renderedMenuItems = useMemo(() => {
     const addedMenus = new Set();
-
-    return props
-      .filter(item => {
-        if (!addedMenus.has(item?.id)) {
-          addedMenus.add(item?.id);
-          return true;
-        }
-        return false;
-      })
-      .map((item,index) => {
-        const menu = item?.menu.toLowerCase();
+    return props.filter(item => {
+      if (!addedMenus.has(item?.id) && item?.menu !== undefined) {
+        addedMenus.add(item?.id);
+        return true;
+      }
+      return false;
+    })
+    .map((item,index) => {
+      const menu = item?.menu.toLowerCase();
 
         return (
           <li key={index}>
-            <a href={`/${menu}`}>
+            <Link to={`/${menu}`}>
               <div className="menu-icon">
                 {icons[menu]}
               </div>
               <span className="nav-text">{item?.menu}</span>
-            </a>
+            </Link>
           </li>
         );
       });

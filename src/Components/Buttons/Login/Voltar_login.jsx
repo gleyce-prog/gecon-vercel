@@ -1,13 +1,13 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+
 export default function Voltar_login({ rota }) {
 
     const handleSkipLogin = () => {
-        window.location.pathname=rota;
+        window.location.pathname= "painel"+ rota;
     };
 
 
     return (
-        <a href="" className="btn-link text-primary" onClick={handleSkipLogin} style={{ cursor: 'pointer' }}><i class="fa-solid fa-angle-left" /> Voltar para Login </a>
+        <a className="btn-link text-primary" onClick={handleSkipLogin} style={{ cursor: 'pointer' }}><i className="fa-solid fa-angle-left" /> Voltar para Login </a>
     );
 }

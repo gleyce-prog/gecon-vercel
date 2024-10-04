@@ -1,7 +1,9 @@
 import React from 'react';
 import ModalDynamic from '../../Components/Modal';
+import { api } from '../../lib/Axios';
 
 const Cadastrar = ({ show, onHide }) => {
+
   const fields = [
     { name: 'nome', label: 'Nome', type: 'text', placeholder: 'Nome Completo', required: true, pattern: '^([A-Za-zà-úÀ-Ú]+(?: [A-Za-zà-úÀ-Ú]+)*)$', step: 1 },
     { name: 'email', label: 'Email', type: 'email', placeholder: 'Email', required: true, step: 1 },

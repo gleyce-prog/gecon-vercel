@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Voltar_login from '../Components/Buttons/Login/Voltar_login';
 import { mostrarAlertaErro, mostrarAlertaSucesso } from '../lib/swal';
 import { api } from '../lib/Axios';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 const Alterar_senha = ({ rota }) => {
   const [password_new, setPasswordNew] = useState('');
   const [password_confirm, setPasswordConfirm] = useState('');
@@ -96,7 +96,7 @@ const Alterar_senha = ({ rota }) => {
                       <a href=""><img src="" className="mb-3 logo-light" alt="" /></a>
                     </div>
                     <div className="login-media text-center">
-                      <img src="images/logo/Logotipo Principal.png" alt="" />
+                    <img src="/painel/images/logo/Logotipo Principal.png" alt="" />
                     </div>
                   </div>
                 </div>

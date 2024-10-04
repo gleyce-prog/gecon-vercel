@@ -106,6 +106,7 @@ const fetchData = (setData, setFilteredData, currentPage, itemsPerPage, sortDire
     console.error('Erro ao buscar os dados:', error);
   }
 };
+
 const TableComponent = ({ apiUrl, columns, title, ModalComponents, dados, showHeader = true, showPagination = true }) => {
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
@@ -116,7 +117,7 @@ const TableComponent = ({ apiUrl, columns, title, ModalComponents, dados, showHe
   const [sortDirection, setSortDirection] = useState('asc');
   const [activeModalIndex, setActiveModalIndex] = useState(null);
   const [selectedItem, setSelectedItem] = useState(null);
-  const itemsPerPageOptions = [10, 20, 30, 40, 7];
+  const itemsPerPageOptions = [10, 20, 30, 40];
 
   useEffect(() => {
     if (data && apiUrl) fetchData(setData, setFilteredData, currentPage, itemsPerPage, sortDirection);
@@ -164,13 +165,11 @@ const TableComponent = ({ apiUrl, columns, title, ModalComponents, dados, showHe
         <div className="card dz-card" id="accordion-three">
           <div className="card-header flex-wrap d-flex justify-content-between align-items-center">
             <div>
-              <h4 className="card-title">Listar {title}s</h4>
+              <h4 className="card-title">Listar {title.concat("s")}</h4>
             </div>
-            {title !== 'Dashboard' && (
-              <div className="d-flex align-items-center">
-                <Buttons variant="primary" onClick={() => handleShowModal(0)} rota={`/${normalizeString(title)}-cadastrar`} type={'cadastrar'} title={title} />
-              </div>
-            )}
+            <div className="d-flex align-items-center">
+              <Buttons variant="primary" onClick={() => handleShowModal(0)} rota={`/${normalizeString(title)}-cadastrar`} type={'cadastrar'} title={title} />
+            </div>
           </div>
           {showHeader && (
             <>

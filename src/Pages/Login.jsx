@@ -4,7 +4,7 @@ import { setCookie, getCookie } from "../utils/Cookies";
 import { loginApi } from '../utils/Login';
 import { useNavigate } from 'react-router-dom';
 
-export default function Login({rota}) {
+export default function Login({ rota }) {
   const [alert, setAlert] = useState(null);
   const navigate = useNavigate();
   useEffect(() => {
@@ -25,18 +25,18 @@ export default function Login({rota}) {
     const senha = document.getElementById('dz-password').value;
 
     try {
-     loginApi(email, senha).then((isLoggedIn) => {
-      if (isLoggedIn) {
+      loginApi(email, senha).then((isLoggedIn) => {
+        if (isLoggedIn) {
           setAlert(showSuccessAlert());
           setTimeout(() => {
-           return navigate(rota, { replace: true });
-          }, 1000);
+            navigate(rota, { replace: true })
+          }, 500);
         } else {
           setAlert(showErrorAlert());
         }
-    });
+      });
 
-     
+
     } catch (error) {
       console.error('Erro ao fazer login:', error);
       setAlert(showErrorAlert());
@@ -51,14 +51,14 @@ export default function Login({rota}) {
       </h4>
     </div>
   );
-  
+
   const showErrorAlert = () => (
     <div className="alert alert-danger" role="alert">
       <i className="fa-regular fa-circle-xmark" style={{ color: "#e81132", marginRight: '8px' }} />
       Usuário ou senha inválidos!
     </div>
   );
-  
+
 
   return (
     <section className="vh-100 login-ativa-projetos">
@@ -74,7 +74,7 @@ export default function Login({rota}) {
                       <a href=""><img src="" className="mb-3 logo-light" alt="" /></a>
                     </div>
                     <div className="login-media text-center">
-                      <img src="images/logo/Logotipo Principal.png" alt="" />
+                      <img src="/painel/images/logo/Logotipo Principal.png" alt="" />
                     </div>
                   </div>
                 </div>
@@ -106,7 +106,7 @@ export default function Login({rota}) {
                             </div>
                           </div>
                           <div className="mb-4">
-                            <Esqueceu_senha rota={"/nova-senha"}/>
+                            <Esqueceu_senha rota={"/nova-senha"} />
                           </div>
                         </div>
                         <div className="text-center mb-4">

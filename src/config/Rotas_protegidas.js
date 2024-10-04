@@ -16,11 +16,10 @@ const RoutesProtected = () => {
     const location = useLocation();  
     const currentRoute = getCurrentRoute(routes, location.pathname);  
     if (location.pathname === "/" ) 
-        return <Navigate to="/login" />;  
+        return <Navigate to="/login" replace={true} />;  
     else if (!element || !currentRoute)
         return <Navigate to="/pagina-nao-encontrada" />;
-
-    return hasAccess(currentRoute) ? element : <Navigate to="/login" />;
+    return hasAccess(currentRoute) ? element : <Navigate to="/login" replace={true} />;
 };
 
 

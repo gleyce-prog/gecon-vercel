@@ -10,8 +10,7 @@ export const getBasename = () => {
         else
             return `/${basename}/`;
     }
-
-
+    
     return '/';
 };
 

@@ -21,8 +21,3 @@ yarn-debug.log*
 yarn-error.log*
 
 .vercel
-node_modules
-node_modules
-
-# Local Netlify folder
-.netlify

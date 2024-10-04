@@ -32,13 +32,13 @@ export default function Buttons({ dado, type, rota, title, onClick }) {
     if (type === 'cadastrar') {
         return (
             <div onClick={onClick}>
-                <a className="btn btn-primary btn-sm" data-bs-toggle="offcanvas" role="button">Adicionar Novo {title}</a>
-            </div>
+               <a className="btn btn-primary btn-sm" role="button">Adicionar Novo {title}</a>
+             </div>
         );
     } else if (type === 'pesquisar') {
         return (
             <div onClick={onClick}>
-                <Button className="btn btn-primary shadow btn-xs sharp me-1">
+                <Button href="#" className="btn btn-primary shadow btn-xs sharp me-1">
                     <i className="fas fa-pencil-alt"></i>
                 </Button>
             </div>
@@ -56,7 +56,7 @@ export default function Buttons({ dado, type, rota, title, onClick }) {
         return (
             <div onClick={ativarUsuario}>
                 <Button variant="success" className="shadow btn-xs sharp">
-                <i class="fa-regular fa-circle-check"></i>
+                <i className="fa-regular fa-circle-check"></i>
                 </Button>
             </div>
         );

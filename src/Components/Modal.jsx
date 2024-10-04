@@ -5,13 +5,15 @@ import { api } from '../lib/Axios';
 import { API_URL, TOKEN } from '../config/Globals';
 import axios from 'axios';
 const DynamicModal = ({ show, onHide, fields, post, get, onSubmit, title }) => {
-  const [formValues, setFormValues] = useState({});
+  const [formValues, setFormValues] = useState(
+    fields.reduce((acc, field) => {
+      acc[field.name] = '';
+      return acc;
+    }, {})
+  );
   const [valueProfiles, setValueProfiles] = useState([]);
-  const [states, setStates] = useState([]);
-  const [cities, setCities] = useState([]);
   const [profiles, setProfiles] = useState([]);
   const [currentStep, setCurrentStep] = useState(1);
-
   // Função para obter etapas distintas
   const getFieldSteps = (fields) => {
     const steps = [];
@@ -30,14 +32,6 @@ const DynamicModal = ({ show, onHide, fields, post, get, onSubmit, title }) => {
   const steps = getFieldSteps(fields);
 
   // Funções para buscar dados
-  const fetchStates = async () => {
-    try {
-      const response = await axios.get('https://servicodados.ibge.gov.br/api/v1/localidades/estados');
-      setStates(response.data);
-    } catch (error) {
-      console.error('Erro ao buscar estados:', error);
-    }
-  };
 
   const fetchProfiles = () => {
     try {
@@ -50,14 +44,6 @@ const DynamicModal = ({ show, onHide, fields, post, get, onSubmit, title }) => {
     }
   };
 
-  const fetchCities = async (stateId) => {
-    try {
-      const response = await axios.get(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${stateId}/municipios`);
-      setCities(response.data);
-    } catch (error) {
-      console.error('Erro ao buscar cidades:', error);
-    }
-  };
 
   // Função para preencher campos automaticamente
   const fetchAdditionalData = (fieldName, fieldValue) => {
@@ -90,17 +76,11 @@ const DynamicModal = ({ show, onHide, fields, post, get, onSubmit, title }) => {
   }
   // Manipulação de eventos
   const handleChange = (e) => {
-    console.log('ok')
     const { name, value } = e.target;
-    console.log(name)
     setFormValues(prevValues => ({
       ...prevValues,
       [name]: value
     }));
-
-    if (name === 'state') {
-      fetchCities(value);
-    }
 
     const field = fields.find(field => field.name === name);
     if (field?.request && value) {
@@ -119,7 +99,6 @@ const DynamicModal = ({ show, onHide, fields, post, get, onSubmit, title }) => {
     let method = '';
 
     const data = {};
-
     for (const [key, value] of Object.entries(formValues)) {
       if (key === 'perfil') {
         data[key] = valueProfiles;
@@ -132,6 +111,7 @@ const DynamicModal = ({ show, onHide, fields, post, get, onSubmit, title }) => {
         data[key] = value;
       }
     }
+
     switch (getFirst(title)) {
       case 'Cadastro':
         method = 'POST';
@@ -142,8 +122,6 @@ const DynamicModal = ({ show, onHide, fields, post, get, onSubmit, title }) => {
       default:
         break;
     }
-
-
 
     try {
     console.table(data, { tableName: 'Dados enviados!!' });
@@ -166,8 +144,6 @@ const DynamicModal = ({ show, onHide, fields, post, get, onSubmit, title }) => {
             :
             alert(response.json()['description']))
         .catch(error => console.error('Erro:', error));
-      {
-      }
     } catch (error) {
       console.error('Erro ao enviar formulário:', error);
     }
@@ -195,8 +171,7 @@ const DynamicModal = ({ show, onHide, fields, post, get, onSubmit, title }) => {
 
     // Definindo ações para campos que necessitam de busca de dados
     const actions = {
-      perfil: fetchProfiles,
-      states: fetchStates,
+      perfil: fetchProfiles
     };
 
     fields.forEach((field) => {
@@ -206,6 +181,7 @@ const DynamicModal = ({ show, onHide, fields, post, get, onSubmit, title }) => {
       }
     });
   }, [fields]);
+
 
   return (
     <Modal
@@ -242,31 +218,25 @@ const DynamicModal = ({ show, onHide, fields, post, get, onSubmit, title }) => {
                           required={field.required}
                         >
                           <option value="" disabled>Selecione</option>
-                          {field.label === 'Estado' && states.map(state => (
-                            <option key={state.id} value={state.id}>
-                              {state.nome}
-                            </option>
-                          ))}
-                          {field.label === 'Cidade' && cities.map(city => (
-                            <option key={city.id} value={city.id}>
-                              {city.nome}
-                            </option>
-                          ))}
                         </Form.Control>
                       ) : field.type === 'multi-select' ? (
                         field.label === 'Perfil' && (
                           <Multiselect
                             options={profiles.map((profile) => ({
                               id: profile.id,
-                              name: profile.grupo,
-                              disabled: !profile.ativo
+                              name: profile.grupo
                             }))}
+                            displayValue="name"
                             showCheckbox={true}
-                            onChange={(e) => handleChange}
+                            style={{
+                              multiselectContainer: { fontSize: '12px' },
+                              optionContainer: { fontSize: '12px' },
+                              chips: { fontSize: '12px' }
+                            }}
+                            emptyRecordMsg={"Sem opções"}
                             onSelect={onSelect}
                             onRemove={onRemove}
                             placeholder={field.placeholder}
-                            selectedValues={field.defaultValue}
                             name={field.name}
                             required={field.required}
                             loading={!profiles ? true : false}

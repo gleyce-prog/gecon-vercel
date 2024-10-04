@@ -9,7 +9,6 @@ const Cadastrar = ({ show, onHide }) => {
 
 
   const onSubmit = (data) => {
-    console.log(data)
     if (data.status === 'ERROR') {
       alert(data.message);
     } else {

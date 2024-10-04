@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Navigate, useRoutes } from 'react-router-dom';
+import { useRoutes } from 'react-router-dom';
 import Login from '../Pages/Login.jsx';
 import ListarUsuario from '../Pages/Usuário/Listar.jsx';
 import ListarCliente from '../Pages/Cliente/Listar.jsx';
@@ -8,7 +8,7 @@ import Layout from '../Pages/Layout.jsx';
 import AlterarSenha from '../Pages/Alterar_senha.jsx';
 import PaginaErro from '../Pages/Erro/Pagina_nao_encontrada.jsx';
 import Home from '../Components/Comum/Dashboard.jsx';
-
+import { getBasenameInLocalStorage } from "./getBasename.js";
 const addCssLink = (href) => {
     const link = document.createElement('link');
     link.rel = 'stylesheet';
@@ -27,7 +27,7 @@ const addScripts = (src) => {
 export const routes = [
     {
         path: "/login",
-        element: <Login rota={"/home"}/>,
+        element: <Login rota={'/home'} />,
         type: "public",
         css: [Styles.login],
         script: [Scripts.modal_jquery, Scripts.modal_bootstrap]
@@ -35,26 +35,31 @@ export const routes = [
     {
         path: "/home",
         element: <Layout children={<Home />} title={'Home'} />,
-        type: "public",
+        type: "logged",
         css: [],
         script: []
     },
     {
         path: "/nova-senha",
-        element: <AlterarSenha rota={"/login"}/>,
+        element: <AlterarSenha rota={'/login'} />,
         type: "public",
         css: [],
     },
     {
         path: "/pagina-nao-encontrada",
-    element: <PaginaErro rota={"/login"}/>,
+        element: <PaginaErro rota={'/login'} />,
+        type: "public",
+        css: [],
+    }, {
+        path: "*",
+        element: <PaginaErro rota={'/login'} />,
         type: "public",
         css: [],
     },
     {
         path: "/usuario",
         element: <Layout children={<ListarUsuario />} title={'Usuários'} />,
-        type: "public",
+        type: "protected",
         key: 1,
         css: [],
     },
@@ -81,29 +86,29 @@ export const routes = [
     {
         path: "/socio-pesquisar",
         type: "protected",
-        key: 2
+        key: 3
     },
     {
         path: "/socio-cadastrar",
         type: "protected",
-        key: 2
+        key: 3
     },
     {
         path: "/cliente",
         element: <Layout children={<ListarCliente />} title={'Usuários'} />,
         type: "protected",
-        key: 2,
+        key: 3,
         css: [],
     },
     {
         path: "/cliente-cadastrar",
         type: "protected",
-        key: 2
+        key: 3
     },
     {
         path: "/cliente-pesquisar",
         type: "protected",
-        key: 2
+        key: 3
     },
     {
         path: "/cliente-inativar",
@@ -113,7 +118,7 @@ export const routes = [
     {
         path: "/cliente-ativar",
         type: "protected",
-        key: 2
+        key: 3
     },
 ]
 
