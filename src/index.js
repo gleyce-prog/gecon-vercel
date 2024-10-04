@@ -8,7 +8,7 @@ const basename = getBasename();
 setBasenameInLocalStorage(basename);
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <BrowserRouter basename={getBasenameInLocalStorage()}>
+  <BrowserRouter>
     <RoutesProtected />
   </BrowserRouter>
 );
