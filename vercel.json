@@ -1,0 +1,15 @@
+{
+      "version": 2,
+        "builds": [
+            {
+                  "src": "api/middleware.js",
+                        "use": "@vercel/node"
+                            }
+                              ],
+                                "routes": [
+                                    {
+                                          "src": "/login",
+                                                "dest": "/api/middleware.js"
+                                                    }
+                                                ]
+                                            }
