@@ -25,8 +25,8 @@ export default function Header({ props }) {
     <div>
       <div className="nav-header">
         <a href="/dashboard" className="brand-logo">
-          <img className="logo-abbr" src="/painel/images/logo/Símbolo Principal.png" alt="" srcSet="" width={39} height={23} />
-          <img className="brand-title" src="/painel/images/logo/Logotipo Negativo 01.png" width={100} height={20} />
+          <img className="logo-abbr" src="/images/logo/Símbolo Principal.png" alt="" srcSet="" width={39} height={23} />
+          <img className="brand-title" src="/images/logo/Logotipo Negativo 01.png" width={100} height={20} />
         </a>
         <div className="nav-control">
           <div className="hamburger">

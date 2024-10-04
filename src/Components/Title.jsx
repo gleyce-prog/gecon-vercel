@@ -8,7 +8,7 @@ export default function Title(props) {
           <h5 className="bc-title">{title}</h5>
         </li>
         <li className="breadcrumb-item">
-          <a href="/painel/home">
+          <a href="/home">
             <svg
               width="17"
               height="17"

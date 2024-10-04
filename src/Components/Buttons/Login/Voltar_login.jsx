@@ -3,7 +3,7 @@ import React from 'react';
 export default function Voltar_login({ rota }) {
 
     const handleSkipLogin = () => {
-        window.location.pathname= "painel"+ rota;
+        window.location.pathname= rota;
     };
 
 

@@ -96,7 +96,7 @@ const Alterar_senha = ({ rota }) => {
                       <a href=""><img src="" className="mb-3 logo-light" alt="" /></a>
                     </div>
                     <div className="login-media text-center">
-                    <img src="/painel/images/logo/Logotipo Principal.png" alt="" />
+                    <img src="/images/logo/Logotipo Principal.png" alt="" />
                     </div>
                   </div>
                 </div>

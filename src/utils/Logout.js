@@ -11,7 +11,7 @@ const HandleLogout = () =>{
         cancelButtonText: 'Cancelar'
     }).then((result) => {
         if (result.isConfirmed) {
-            window.location.pathname = '/painel/';
+            window.location.pathname = '/';
             localStorage.clear();
         }
     });

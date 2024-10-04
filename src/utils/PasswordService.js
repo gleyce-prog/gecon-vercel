@@ -8,7 +8,7 @@ const Senhas = (password_new, password_confirm) => {
                 title: 'Senha salva com sucesso!',
                 showConfirmButton: false
             }).then(() => {
-                window.location.pathname = '/painel/login';
+                window.location.pathname = '/login';
             });
         }
     }
