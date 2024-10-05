@@ -9,7 +9,6 @@ export default function Listar_Usuario() {
     { value: 'cpf', label: 'CPF' },
     { value: 'nome', label: 'Nome' },
     { value: 'email', label: 'Email' },
-    { value: 'perfil', label: 'Perfil' },
     { value: 'ativo', label: 'Status' },
     { value: 'ações', label: 'Ações' }
   ];

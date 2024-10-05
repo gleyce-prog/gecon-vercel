@@ -1,5 +1,5 @@
 import { api } from '../lib/Axios';
-import { JWT_TOKEN } from '../config/Globals';
+import { jwtToken } from '../config/Globals';
 const storage = localStorage;
 const loginApi = (email, senha) => {
     return api().post('auth/login', {
@@ -16,8 +16,8 @@ const loginApi = (email, senha) => {
     });
 }
 const getWithExpiration = () => {
-    if (JWT_TOKEN) {
-        const exp = new Date(JWT_TOKEN?.exp * 1000);
+    if (jwtToken) {
+        const exp = new Date(jwtToken?.exp * 1000);
         const now = new Date();
         if (now > exp) {
             alert("Token expirado!");

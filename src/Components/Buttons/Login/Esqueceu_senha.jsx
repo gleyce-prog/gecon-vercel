@@ -2,37 +2,35 @@ import React, { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { api } from '../../../lib/Axios';
-import { useNavigate } from 'react-router-dom';
-export default function Esqueceu_senha({rota}) {
+export default function Esqueceu_senha({ rota }) {
   const [email, setEmail] = useState('');
   const [showForgotPasswordModal, setShowForgotPasswordModal] = useState(false);
   const [showEmailSentModal, setShowEmailSentModal] = useState(false);
-  const navigate = useNavigate();
 
-  
+
   const handleCloseForgotPasswordModal = () => setShowForgotPasswordModal(false);
   const handleShowForgotPasswordModal = () => setShowForgotPasswordModal(true);
 
-  const handleCloseEmailSentModal = () => navigate(rota, { replace: true });
+  const handleCloseEmailSentModal = () => window.location.pathname = rota;
   const handleShowEmailSentModal = () => setShowEmailSentModal(true);
 
   const handleSendEmail = () => {
-    try{
+    try {
       api().put('/usuario/generateCode', {
-       email: email
+        email: email
       })
-      .then((response) => {
-        if (response.data === true) {
-          localStorage.setItem('email', email);
-          handleCloseForgotPasswordModal()
-          handleShowEmailSentModal();
-        }
-      })
-    }catch(error){
+        .then((response) => {
+          if (response.data === true) {
+            localStorage.setItem('email', email);
+            handleCloseForgotPasswordModal()
+            handleShowEmailSentModal();
+          }
+        })
+    } catch (error) {
       console.error("Erro ao enviar email:", error);
     }
 
-    
+
   };
 
   const handleEmailChange = (event) => {

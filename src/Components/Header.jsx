@@ -1,25 +1,11 @@
 import HandleLogout from '../utils/Logout';
 import { useState, useEffect } from "react";
 import { getCookie, setCookie } from "../utils/Cookies";
-import { useNavigate } from 'react-router-dom';
 export default function Header({ props }) {
   const logout = () => {
     HandleLogout();
   }
-  const [theme, setTheme] = useState(getCookie('theme'));
-  
-  const toggleTheme = () => {
-    const newTheme = theme === 'light' ? 'dark' : 'light';
-    setTheme(newTheme);
-    setCookie('theme', newTheme, 30);
-  };
 
-  useEffect(() => {
-    if (!getCookie('theme'))
-      setCookie('theme', 'light', 30);
-
-    document.body.setAttribute('data-theme-version', theme);
-  }, [theme]);
 
   return (
     <div>
@@ -44,8 +30,8 @@ export default function Header({ props }) {
               </div>
               <ul className="navbar-nav header-right">
                 <li className="nav-item dropdown notification_dropdown">
-                  <a className="nav-link" data-bs-toggle="dropdown" onClick={toggleTheme}>
-                    <i className={`fa-regular fa-${theme === 'dark' ? 'sun' : 'moon'}`} style={{ color: theme === 'black' ? '#fff' : '#f0f0f0' }} />
+                  <a id="theme" class="nav-link" data-bs-toggle="dropdown">
+                    <i class="fa-regular fa-moon" style={{color: "#f0f0f0"}}/>
                   </a>
                 </li>
                 <li className="nav-item dropdown notification_dropdown">
@@ -65,23 +51,25 @@ export default function Header({ props }) {
                       <div className="header-info2 d-flex align-items-center">
                         <div className="header-media">
                           <i className="fa-solid fa-user" style={{ color: "#FFFFFF" }} />
-                        </div>
-                        <div className="header-info">
-                          <p>{props}</p>
+
                         </div>
                       </div>
                     </a>
                     <div className="dropdown-menu dropdown-menu-end" style={{}}>
                       <div className="card border-0 mb-0">
                         <div className="card-header py-2">
-                          <a
-                            className="dropdown-item ai-icon"
-                            onClick={logout}
-                          
-                          >
-                            <i className="fas fa-sign-out-alt" style={{ color: "#ff7979" }} />
-                            <span className="ms-2 text-danger" >Logout </span>
-                          </a>
+                          <div class="products">
+                            <div>
+                              <p>{props}</p>
+                              <a
+                                className="dropdown-item ai-icon"
+                                onClick={logout}
+                              >
+                                <i className="fas fa-sign-out-alt" style={{ color: "#ff7979" }} />
+                                <span className="ms-2 text-danger" >Logout </span>
+                              </a>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>

@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import Voltar_login from '../Components/Buttons/Login/Voltar_login';
 import { mostrarAlertaErro, mostrarAlertaSucesso } from '../lib/swal';
 import { api } from '../lib/Axios';
-import { useNavigate } from 'react-router-dom';
 const Alterar_senha = ({ rota }) => {
   const [password_new, setPasswordNew] = useState('');
   const [password_confirm, setPasswordConfirm] = useState('');
@@ -10,7 +9,6 @@ const Alterar_senha = ({ rota }) => {
   const [errorNewPassword, setErrorNewPassword] = useState('');
   const [errorConfirmPassword, setErrorConfirmPassword] = useState('');
   const [errorCode, setErrorCode] = useState('');
-  const navigate = useNavigate();
 
   const handleNewPassword = (e) => {
     const newPassword = e.target.value;
@@ -70,7 +68,7 @@ const Alterar_senha = ({ rota }) => {
             'Você pode agora voltar para o login.',
             () => {
               localStorage.removeItem('email');
-              navigate(rota, { replace: true });
+              window.location.pathname=rota;
             }
           );
         }

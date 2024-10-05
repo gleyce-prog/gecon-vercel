@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Multiselect from 'multiselect-react-dropdown';
 import { Modal, Form, Row, Col, Button } from 'react-bootstrap';
 import { api } from '../lib/Axios';
-import { API_URL, TOKEN } from '../config/Globals';
+import { token } from '../config/Globals';
 import axios from 'axios';
 const DynamicModal = ({ show, onHide, fields, post, get, onSubmit, title }) => {
   const [formValues, setFormValues] = useState(
@@ -126,10 +126,10 @@ const DynamicModal = ({ show, onHide, fields, post, get, onSubmit, title }) => {
     try {
     console.table(data, { tableName: 'Dados enviados!!' });
 
-      fetch(`${API_URL}/${post}`, {
+      fetch(`https://painel-ativa.vercel.app/api/proxy/${post}`, {
         method: `${method}`,
         headers: {
-          'Authorization': `Bearer ${TOKEN}`,
+          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(data)
@@ -258,15 +258,17 @@ const DynamicModal = ({ show, onHide, fields, post, get, onSubmit, title }) => {
                         field.customComponent
                       ) : (
                         <Form.Control
-                          type={field.type}
-                          placeholder={field.placeholder}
-                          name={field.name}
-                          value={formValues[field.name] ?? ''}
+                          type={field?.type}
+                          placeholder={field?.placeholder}
+                          name={field?.name}
+                          value={field?.value}
+                          defaultValue={field?.defaultValue}
                           onChange={handleChange}
-                          required={field.required}
-                          pattern={field.pattern}
-                          title={field.title}
-                          disabled={field.disabled}
+                          required={field?.required}
+                          pattern={field?.pattern}
+                          title={field?.title}
+                          disabled={field?.disabled}
+                          text={field?.text}
                         />
                       )}
                     </Form.Group>

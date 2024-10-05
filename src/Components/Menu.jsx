@@ -1,6 +1,5 @@
 import React, { useMemo } from 'react';
 import { getCookie } from '../utils/Cookies';
-import { Link, Navigate } from 'react-router-dom';
 const Menu = ({ props = [] }) => {
   const renderedMenuItems = useMemo(() => {
     const addedMenus = new Set();
@@ -16,12 +15,12 @@ const Menu = ({ props = [] }) => {
 
         return (
           <li key={index}>
-            <Link to={`/${menu}`}>
+            <a href={`/${menu}`}>
               <div className="menu-icon">
                 {icons[menu]}
               </div>
               <span className="nav-text">{item?.menu}</span>
-            </Link>
+            </a>
           </li>
         );
       });
@@ -73,9 +72,6 @@ const Container = ({ children }) => {
 };
 
 const icons = {
-  home: <i className={`fas fa-home ${getCookie('theme') === 'light' || getCookie('theme') === null ? 'text-dark' : 'text-light'}`} />
-  ,
-
-  usuario: <i className={`fas fa-user ${getCookie('theme') === 'light' || getCookie('theme') === null ? 'text-dark' : 'text-light'}`} />,
+  home: <i className={`fas fa-home ${getCookie('theme') === 'light'  ? 'text-dark' : 'text-light'}`} />,  usuario: <i className={`fas fa-user ${getCookie('theme') === 'light' ? 'text-dark' : 'text-light'}`} />,
 };
 export { Menu, Preloader, Footer, Container };

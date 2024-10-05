@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react';
 import Esqueceu_senha from '../Components/Buttons/Login/Esqueceu_senha';
 import { setCookie, getCookie } from "../utils/Cookies";
 import { loginApi } from '../utils/Login';
-import { useNavigate } from 'react-router-dom';
+
 
 export default function Login({ rota }) {
   const [alert, setAlert] = useState(null);
-  const navigate = useNavigate();
+
   useEffect(() => {
     const emailFromCookie = getCookie('email');
     if (emailFromCookie) {
@@ -29,7 +29,7 @@ export default function Login({ rota }) {
         if (isLoggedIn) {
           setAlert(showSuccessAlert());
           setTimeout(() => {
-            navigate(rota, { replace: true })
+            window.location.pathname = rota
           }, 500);
         } else {
           setAlert(showErrorAlert());

@@ -1,11 +1,11 @@
 import Swal from 'sweetalert2';
-
+const backgroundConfirmButton = '#135131';
 // Função para mostrar alerta de sucesso
 const mostrarAlertaSucesso = (titulo, mensagem, callback) => {
   Swal.fire({
     title: titulo,
     icon: 'success',
-    confirmButtonColor: '#3085d6',
+    confirmButtonColor: backgroundConfirmButton,
     confirmButtonText: 'OK',
   }).then((result) => {
     if (result.isConfirmed && callback) {
@@ -20,7 +20,7 @@ const mostrarAlertaErro = (mensagem) => {
     title: 'Erro',
     text: mensagem,
     icon: 'error',
-    confirmButtonColor: '#135131',
+    confirmButtonColor: backgroundConfirmButton,
     confirmButtonText: 'OK',
   });
 };
@@ -34,7 +34,7 @@ const mostrarAlertaConfirmacao = (titulo, texto, acao, timeout = null) => {
       text: texto,
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: '#135131',
+      confirmButtonColor: backgroundConfirmButton,
       cancelButtonColor: '#d33',
       confirmButtonText: 'Sim',
       cancelButtonText: 'Cancelar'
@@ -42,12 +42,12 @@ const mostrarAlertaConfirmacao = (titulo, texto, acao, timeout = null) => {
       if (result.isConfirmed && acao) {
         acao().then((response) => {
           if (response.status === 200) {
-            mostrarAlertaSucesso('Sucesso', 'Ação realizada com sucesso.');
-            if (timeout) {
-              setTimeout(() => {
-                window.location.reload();
-              }, timeout);
-            }
+            mostrarAlertaSucesso('Sucesso', 'Ação realizada com sucesso.',
+              () => {
+                setTimeout(() => {
+                  window.location.reload();
+                }, timeout)
+              });
           }
         })
           .catch((error) => {
