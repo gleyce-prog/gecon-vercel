@@ -129,7 +129,7 @@ const DynamicModal = ({ show, onHide, fields, post, get, onSubmit, title }) => {
     try {
       console.table(data, { tableName: 'Dados enviados!!' });
 
-      fetch(`https://painel-ativa.vercel.app/api/proxy/${post}`, {
+      fetch(`http://localhost:8080/`, {
         method: `${method}`,
         headers: {
           'Authorization': `Bearer ${token}`,
