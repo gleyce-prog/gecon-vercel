@@ -1,7 +1,7 @@
 export default async function handler(req, res) {
   const base = req.url.includes('/api/proxy') ? req.url.replace('/api/proxy/', '') : req.url;
 
-
+  // const endpoint = `http://195.35.40.77:8080/gecon/v1/${base}`;
   console.log("Endpoint: " + endpoint)
   console.log("Headers: "+ req.headers)
 
