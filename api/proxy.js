@@ -22,8 +22,10 @@ export default async function handler(req, res) {
         "perfil": []
       }),
     }).then((response)=>{
-      console.log(response)
-    }).catch((error)=> console.log(error))
+      return res.status(200).json({ error: response})
+    }).catch((error)=> {
+      return res.status(400).json({ error: error})
+    })
 
    
   } catch (error) {
