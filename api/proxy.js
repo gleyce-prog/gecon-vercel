@@ -22,7 +22,7 @@ export default async function handler(req, res) {
         "perfil": []
       }),
     }).then((response)=>{
-      return res.status(200).json({ error: response})
+      return res.status(200).json({ acerto: response.data})
     }).catch((error)=> {
       return res.status(400).json({ error: error})
     })
