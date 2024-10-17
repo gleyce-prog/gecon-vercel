@@ -13,26 +13,17 @@ export default async function handler(req, res) {
     console.log("Fazendo requisição para:", url);
 
     const response = await fetch(url, {
-      method: req.method,
+      method: "POST",
       headers: {
         'Content-Type': 'application/json',
-        // Adicione outros cabeçalhos, se necessário
       },
       body: JSON.stringify(data),
-    });
+    }).then((response)=>{
+      console.log(response)
+    }).catch((error)=> console.log(error))
 
-    const responseData = await response.json();
-
-    console.log("Resposta do servidor:", responseData);
-
-    if (!response.ok) {
-      console.error("Erro na requisição:", responseData);
-      return res.status(response.status).json({ error: responseData.message || 'Erro desconhecido' });
-    }
-
-    res.status(response.status).json(responseData);
+   
   } catch (error) {
-    console.error('Erro ao fazer a requisição:', error);
-    res.status(500).json({ error: 'Erro interno do servidor' });
+   
   }
 }
