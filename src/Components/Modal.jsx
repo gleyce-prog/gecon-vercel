@@ -1,8 +1,10 @@
+
+
 import React, { useEffect, useState } from 'react';
 import Multiselect from 'multiselect-react-dropdown';
 import { Modal, Form, Row, Col, Button } from 'react-bootstrap';
 import { api } from '../lib/Axios';
-import { token } from '../config/Globals';
+import { url, token } from '../config/Globals';
 import axios from 'axios';
 const DynamicModal = ({ show, onHide, fields, post, get, onSubmit, title }) => {
   const [formValues, setFormValues] = useState(
@@ -74,7 +76,7 @@ const DynamicModal = ({ show, onHide, fields, post, get, onSubmit, title }) => {
     const name = trimmed.split(' ');
     return name[0];
   }
-
+  // Manipulação de eventos
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormValues(prevValues => ({
@@ -88,6 +90,7 @@ const DynamicModal = ({ show, onHide, fields, post, get, onSubmit, title }) => {
     }
   };
   const onSelect = (selectedList, selectedItem) => {
+    console.log(selectedList);
     setValueProfiles(selectedList.sort((a, b) => a.id - b.id).map((item) => item.id));
   };
 
@@ -137,7 +140,7 @@ const DynamicModal = ({ show, onHide, fields, post, get, onSubmit, title }) => {
         .then(response => {
           if (!response.ok) {
             return response.json().then(err => {
-              throw new Error(err.description || 'Erro desconhecido');
+              throw new Error(err.description);
             });
           }
           return response.json();
@@ -185,6 +188,14 @@ const DynamicModal = ({ show, onHide, fields, post, get, onSubmit, title }) => {
         action();
       }
     });
+
+
+    fields.forEach((field) => {
+      if (field.type === 'multi-select' && field.checkeds && profiles) {
+        setValueProfiles(field.checkeds);
+      }
+    });
+
   }, [fields]);
 
 
@@ -227,47 +238,46 @@ const DynamicModal = ({ show, onHide, fields, post, get, onSubmit, title }) => {
                       ) : field.type === 'multi-select' ? (
                         field.label === 'Perfil' && (
                           <Multiselect
-                          options={profiles.map((profile) => ({
-                            id: profile.id,
-                            name: profile.grupo
-                          }))}
-                          displayValue="name"
-                          showCheckbox={true}
-                          style={{
-                            multiselectContainer: { fontSize: '12px' },
-                            optionContainer: { fontSize: '12px' },
-                            chips: { fontSize: '12px' }
-                          }}
-                          emptyRecordMsg={"Sem opções"}
-                          onSelect={onSelect}
-                          onRemove={onRemove}
-                          placeholder={field.placeholder}
-                          name={field.name}
-                          required={field.required}
-                          loading={!profiles ? true : false}
-                          hideSelectedList={true}
-                          selectedValues={
-                            profiles
-                              .filter(profile => field?.checkeds?.includes(profile.id)) // Filtrar perfis já selecionados com base em formData.checkeds
-                              .map(profile => ({ id: profile.id, name: profile.grupo }))  // Mapear para o formato aceito pelo Multiselect
-                          }
-                        />
+                            options={profiles.map((profile) => ({
+                              id: profile.id,
+                              name: profile.grupo
+                            }))}
+                            displayValue="name"
+                            showCheckbox={true}
+                            style={{
+                              multiselectContainer: { fontSize: '12px' },
+                              optionContainer: { fontSize: '12px' },
+                              chips: { fontSize: '12px' }
+                            }}
+                            emptyRecordMsg={"Sem opções"}
+                            onSelect={onSelect}
+                            onRemove={onRemove}
+                            placeholder={field.placeholder}
+                            name={field.name}
+                            required={field.required}
+                            loading={!profiles ? true : false}
+                            hideSelectedList={true}
+                            selectedValues={
+                              profiles
+                                .filter(profile => field?.checkeds?.includes(profile.id))
+                                .map(profile => ({ id: profile.id, name: profile.grupo }))
+                            }
+
+                          />
                         )
-                      )  : field.type === 'custom' ? (
+                      ) : field.type === 'custom' ? (
                         field.customComponent
                       ) : (
                         <Form.Control
-                          type={field?.type}
-                          placeholder={field?.placeholder}
-                          name={field?.name}
-                          value={field?.value}
-                          defaultValue={field?.defaultValue}
+                          type={field.type}
+                          placeholder={field.placeholder}
+                          name={field.name}
+                          value={formValues[field.name] ?? ''}
                           onChange={handleChange}
-                          required={field?.required}
-                          pattern={field?.pattern}
-                          title={field?.title}
-                          disabled={field?.disabled}
-                          text={field?.text}
+                          required={field.required}
+                          pattern={field.pattern}
+                          title={field.title}
+                          disabled={field.disabled}
                         />
                       )}
                     </Form.Group>

@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import Esqueceu_senha from '../Components/Buttons/Login/Esqueceu_senha';
+import EsqueceuSenha from '../Components/Buttons/Login/Esqueceu_senha';
 import { setCookie, getCookie } from "../utils/Cookies";
 import { loginApi } from '../utils/Login';
-
-
+import { useNavigate } from 'react-router-dom';
 export default function Login({ rota }) {
   const [alert, setAlert] = useState(null);
-
+  const navigate = useNavigate();
   useEffect(() => {
     const emailFromCookie = getCookie('email');
     if (emailFromCookie) {
@@ -29,7 +28,7 @@ export default function Login({ rota }) {
         if (isLoggedIn) {
           setAlert(showSuccessAlert());
           setTimeout(() => {
-            window.location.pathname = rota
+            navigate('/home')
           }, 500);
         } else {
           setAlert(showErrorAlert());
@@ -67,7 +66,7 @@ export default function Login({ rota }) {
           <div className="col col-xl-10">
             <div className="card" style={{ borderRadius: '1rem' }}>
               <div className="row g-0">
-                <div className="col-md-6 col-lg-5 d-none d-md-block">
+                <div className="col-md-6 col-lg-5 d-md-block">
                   <div>
                     <div className="login-content">
                       <a href=""><img src="" className="mb-3 logo-dark" alt="" /></a>
@@ -83,7 +82,6 @@ export default function Login({ rota }) {
                     <div className="login-form">
                       <div className="text-center">
                         <h3 className="title">Login</h3>
-                        <p>Seja bem-vindo ao Sistema da Ativa Projetos!</p>
                       </div>
                       <form onSubmit={handleSubmit}>
                         <div className="mb-4">
@@ -106,7 +104,7 @@ export default function Login({ rota }) {
                             </div>
                           </div>
                           <div className="mb-4">
-                            <Esqueceu_senha rota={"/nova-senha"} />
+                            <EsqueceuSenha rota={"/nova-senha"} />
                           </div>
                         </div>
                         <div className="text-center mb-4">
