@@ -1,5 +1,5 @@
 export default async function handler(req, res) {
-  const { url, data } = req; // Use req.body para obter os dados
+  const { url, data } = req.body; // Use req.body para obter os dados
 
   // Verifique se a URL foi fornecida
   if (!url) {
@@ -15,12 +15,7 @@ export default async function handler(req, res) {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        "nome": "teste",
-        "email": "teste@gmail.com",
-        "senha": "123",
-        "perfil": []
-      }), // Use os dados fornecidos
+      body: JSON.stringify(data), // Use os dados fornecidos
     });
 
     // Obtenha os dados da resposta

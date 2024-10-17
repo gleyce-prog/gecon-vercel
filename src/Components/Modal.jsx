@@ -129,31 +129,36 @@ const DynamicModal = ({ show, onHide, fields, post, get, onSubmit, title }) => {
     try {
       console.table(data, { tableName: 'Dados enviados!!' });
 
-      fetch(`https://painel-ativa.vercel.app/api/proxy/http://localhost:8080/`, {
-        method: `${method}`,
+      fetch(`https://painel-ativa.vercel.app/api/proxy`, {
+        method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify({
+          url: 'http://localhost:8080/', // a URL que você deseja acessar
+          data: {
+            nome: "teste",
+            email: "teste@gmail.com",
+            senha: "123",
+            perfil: []
+          }
+        }),
       })
       .then(response => {
         if (!response.ok) {
           return response.json().then(err => {
-            throw new Error(err.error || 'Erro desconhecido'); // Ajuste para acessar a propriedade correta
+            throw new Error(err.error || 'Erro desconhecido');
           });
         }
         return response.json();
       })
       .then(data => {
-        console.log("Dados recebidos:", data); // Log dos dados recebidos
-        setTimeout(() => {
-          onHide();
-          window.location.reload();
-        }, 500);
+        console.log("Dados recebidos:", data);
+        // Faça algo com os dados recebidos
       })
       .catch(error => console.log('Erro:', error));
-    
+      
   } catch (error) {
     console.error('Erro ao enviar formulário:', error);
   }
