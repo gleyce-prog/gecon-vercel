@@ -151,7 +151,7 @@ const DynamicModal = ({ show, onHide, fields, post, get, onSubmit, title }) => {
             window.location.reload();
           }, 500);
         })
-        .catch(error => console.log(`Erro: ${error.message}`));
+        .catch(error => error ? window.location.reload() : console.log(error));
 
       
   } catch (error) {
