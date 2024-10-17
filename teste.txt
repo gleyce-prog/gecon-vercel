@@ -1,0 +1,180 @@
+import React, { useEffect, useState } from 'react';
+import { Button, Divider, Flex, Radio, Table, Drawer } from 'antd';
+import qs from 'qs';
+import axios from 'axios';
+import Title from 'antd/es/skeleton/Title';
+import { useNavigate } from 'react-router-dom';
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import navigate from 'navigate';
+const rowSelection = {
+  onChange: (selectedRowKeys, selectedRows) => {
+    console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+
+  },
+  getCheckboxProps: (record) => ({
+    disabled: record.name === 'Disabled User',
+    name: record.name,
+  }),
+};
+
+
+const adicionarActions = (columns) => {
+  let encontrado = false;
+  columns.find((item) => {
+    if (item.title === "Action")
+      encontrado = true;
+  })
+  return encontrado;
+}
+const Listar = ({ title, columns, get, button, rota }) => {
+  const [data, setData] = useState([]);
+  const [dado, setDado] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [open, setOpen] = useState(false);
+  const showDrawer = () => {
+    setOpen(true);
+  };
+  const onClose = () => {
+    setOpen(false);
+  };
+  const [selectionType, setSelectionType] = useState('checkbox');
+  const [tableParams, setTableParams] = useState({
+    pagination: {
+      current: 1,
+      pageSize: 10,
+    },
+  });
+
+  if (!adicionarActions(columns)) columns.push({
+    title: 'Action',
+    dataIndex: '',
+    key: 'action',
+    render: (text, record) => (
+      <div style={{ display: "flex" }}>
+        <Button
+          shape="circle"
+          icon={<DeleteOutlined />}
+          // onClick={showDrawer}
+          onClick={(e) => handleClick(e, rota, 'deletar', record.id)}
+        />
+        <Button
+          shape="circle"
+          icon={<EditOutlined />}
+          // onClick={showDrawer}
+          onClick={(e) => handleClick(e, rota, 'editar', record.id)}
+        />
+      </div>
+    )
+  });
+
+
+  const fetchData = () => {
+    const per_page = 10;
+    let page = 1;
+    let itens = 0;
+    const datas = [[]];
+    setLoading(true);
+
+    axios.get(`${get}?_page=${page}&_per_page=${per_page}`)
+      .then((res) => {
+        if (res.data) {
+      
+          itens = Math.ceil(res.data.items / per_page); 
+          datas[0] = res.data.data;
+
+          const loadNextPages = async () => {
+            for (let i = page + 1; i <= itens; i++) {
+              const response = await axios.get(`${get}?_page=${i}&_per_page=${per_page}`);
+              datas[0] = datas[0].concat(response.data.data);
+            }
+            setData(datas[0]);
+            setTableParams({
+              ...tableParams,
+              pagination: {
+                ...tableParams.pagination,
+                total: itens * per_page, // Atualiza total baseado na quantidade de itens
+              },
+            });
+            setLoading(false); 
+          };
+          loadNextPages();
+
+  
+
+        }
+      })
+      .catch((error) => {
+        console.error("Erro ao buscar dados:", error);
+        setLoading(false);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+  useEffect(() => {
+    if (data.length === 0) {
+      fetchData();
+    }
+  }, [
+    tableParams.pagination?.current,
+    tableParams.pagination?.pageSize,
+    tableParams?.sortOrder,
+    tableParams?.sortField,
+    JSON.stringify(tableParams.filters),
+    data
+  ]);
+  const handleTableChange = (pagination, filters, sorter) => {
+    setTableParams({
+      pagination,
+      filters,
+      sortOrder: Array.isArray(sorter) ? undefined : sorter.order,
+      sortField: Array.isArray(sorter) ? undefined : sorter.field,
+    });
+
+    // `dataSource` is useless since `pageSize` changed
+    if (pagination.pageSize !== tableParams.pagination?.pageSize) {
+      setData([]);
+    }
+  };
+  const navigate = useNavigate();
+  const handleClick = (e, rota, type, id) => {
+    if (type !== "cadastrar") {
+      axios.get(`http://localhost:8008/usuarios/${id}`).then((response) => {
+        navigate(`${rota}/${type}?id=${id}`, {
+          state: response.data
+        });
+      })
+
+    }
+    else navigate(`${rota}/${type}`);
+  }
+  return (
+    <div>
+      <div>
+        {title}
+        <div id="button" style={{ display: "Flex", justifyContent: "end" }}>
+          <Button
+            type='default'
+            onClick={(e) => handleClick(e, rota, 'cadastrar')}
+          // onClick={showDrawer}
+          >Cadastro de Usuário</Button>
+        </div>
+      </div>
+      <Divider />
+      <Table
+        columns={columns}
+        rowKey={(record) => record.id}
+        dataSource={data}
+        pagination={tableParams.pagination}
+        loading={loading}
+        onChange={handleTableChange}
+        rowSelection={{
+          type: selectionType,
+          ...rowSelection
+
+        }}
+      />
+    </div>
+  );
+};
+export default Listar;
