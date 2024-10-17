@@ -1,25 +1,38 @@
 export default async function handler(req, res) {
-  const base = req.url.includes('/api/proxy') ? req.url.replace('/api/proxy/', '') : req.url;
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Método não permitido' });
+  }
 
-  // const endpoint = `http://195.35.40.77:8080/gecon/v1/${base}`;
-  console.log("Endpoint: " + endpoint)
-  console.log("Headers: "+ req.headers)
+  const { url, data } = req.body;
+
+  if (!url) {
+    return res.status(400).json({ error: 'URL não fornecida' });
+  }
 
   try {
-    const response = await fetch(req.url, {
+    console.log("Fazendo requisição para:", url);
+
+    const response = await fetch(url, {
       method: req.method,
-      headers: req.headers,
-      body: req.method === 'POST' || req.method === 'PUT' ? JSON.stringify(req.body) : undefined,
+      headers: {
+        'Content-Type': 'application/json',
+        // Adicione outros cabeçalhos, se necessário
+      },
+      body: JSON.stringify(data),
     });
 
+    const responseData = await response.json();
+
+    console.log("Resposta do servidor:", responseData);
+
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      console.error("Erro na requisição:", responseData);
+      return res.status(response.status).json({ error: responseData.message || 'Erro desconhecido' });
     }
 
-    const data = await response.json();
-    res.status(response.status).json(data);
+    res.status(response.status).json(responseData);
   } catch (error) {
-    console.error('Erro na requisição:', error);
-    res.status(error.status).json({ error: error.message  });
+    console.error('Erro ao fazer a requisição:', error);
+    res.status(500).json({ error: 'Erro interno do servidor' });
   }
 }
