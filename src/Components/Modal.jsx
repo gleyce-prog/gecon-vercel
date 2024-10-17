@@ -74,7 +74,7 @@ const DynamicModal = ({ show, onHide, fields, post, get, onSubmit, title }) => {
     const name = trimmed.split(' ');
     return name[0];
   }
-  // Manipulação de eventos
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormValues(prevValues => ({
@@ -124,7 +124,7 @@ const DynamicModal = ({ show, onHide, fields, post, get, onSubmit, title }) => {
     }
 
     try {
-    console.table(data, { tableName: 'Dados enviados!!' });
+      console.table(data, { tableName: 'Dados enviados!!' });
 
       fetch(`https://painel-ativa.vercel.app/api/proxy/${post}`, {
         method: `${method}`,
@@ -134,16 +134,21 @@ const DynamicModal = ({ show, onHide, fields, post, get, onSubmit, title }) => {
         },
         body: JSON.stringify(data)
       })
-        .then(response => response)
-        .then(response =>
-          response.status === 201 ?
-            setTimeout(() => {
-              onHide();
-              window.location.reload();
-            }, 500)
-            :
-            alert(response.json()['description']))
-        .catch(error => console.error('Erro:', error));
+        .then(response => {
+          if (!response.ok) {
+            return response.json().then(err => {
+              throw new Error(err.description || 'Erro desconhecido');
+            });
+          }
+          return response.json();
+        })
+        .then(data => {
+          setTimeout(() => {
+            onHide();
+            window.location.reload();
+          }, 500);
+        })
+        .catch(error => alert(`Erro: ${error.message}`));
     } catch (error) {
       console.error('Erro ao enviar formulário:', error);
     }
@@ -222,39 +227,33 @@ const DynamicModal = ({ show, onHide, fields, post, get, onSubmit, title }) => {
                       ) : field.type === 'multi-select' ? (
                         field.label === 'Perfil' && (
                           <Multiselect
-                            options={profiles.map((profile) => ({
-                              id: profile.id,
-                              name: profile.grupo
-                            }))}
-                            displayValue="name"
-                            showCheckbox={true}
-                            style={{
-                              multiselectContainer: { fontSize: '12px' },
-                              optionContainer: { fontSize: '12px' },
-                              chips: { fontSize: '12px' }
-                            }}
-                            emptyRecordMsg={"Sem opções"}
-                            onSelect={onSelect}
-                            onRemove={onRemove}
-                            placeholder={field.placeholder}
-                            name={field.name}
-                            required={field.required}
-                            loading={!profiles ? true : false}
-                            hidePlaceholder={false}
-                          />
+                          options={profiles.map((profile) => ({
+                            id: profile.id,
+                            name: profile.grupo
+                          }))}
+                          displayValue="name"
+                          showCheckbox={true}
+                          style={{
+                            multiselectContainer: { fontSize: '12px' },
+                            optionContainer: { fontSize: '12px' },
+                            chips: { fontSize: '12px' }
+                          }}
+                          emptyRecordMsg={"Sem opções"}
+                          onSelect={onSelect}
+                          onRemove={onRemove}
+                          placeholder={field.placeholder}
+                          name={field.name}
+                          required={field.required}
+                          loading={!profiles ? true : false}
+                          hideSelectedList={true}
+                          selectedValues={
+                            profiles
+                              .filter(profile => field?.checkeds?.includes(profile.id)) // Filtrar perfis já selecionados com base em formData.checkeds
+                              .map(profile => ({ id: profile.id, name: profile.grupo }))  // Mapear para o formato aceito pelo Multiselect
+                          }
+                        />
                         )
-                      ) : field.type === 'checkbox' ? (
-                        field.options?.map((option, i) => (
-                          <Form.Check
-                            key={i}
-                            type="checkbox"
-                            label={option.label}
-                            name={field.name}
-                            value={option.nome}
-                            onChange={handleChange}
-                          />
-                        ))
-                      ) : field.type === 'custom' ? (
+                      )  : field.type === 'custom' ? (
                         field.customComponent
                       ) : (
                         <Form.Control

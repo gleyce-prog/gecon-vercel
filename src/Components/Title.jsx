@@ -1,19 +1,13 @@
 
 export default function Title(props) {
   const { title } = props;
-  const pathname = window.location.pathname.split('/')[2];
+  const pathname = window.location.pathname.split('/')[1];
 
   return (
     <div className="page-titles">
       <ol className="breadcrumb">
         <li>
           <h5 className="bc-title">{title}</h5>
-        </li>
-        <li className="breadcrumb-item">
-          <a href="/home">
-            <i class="fa-solid fa-house" id="icon-theme-title" />
-            Home
-          </a>
         </li>
         <Breadcrumb pathname={pathname} title={title}/>
       </ol>

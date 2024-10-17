@@ -11,8 +11,8 @@ const HandleLogout = () =>{
         cancelButtonText: 'Cancelar'
     }).then((result) => {
         if (result.isConfirmed) {
-            window.location.pathname = '/';
             localStorage.clear();
+            window.location.pathname = '/login';
         }
     });
 };

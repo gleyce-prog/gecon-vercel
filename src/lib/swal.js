@@ -1,6 +1,6 @@
 import Swal from 'sweetalert2';
 const backgroundConfirmButton = '#135131';
-// Função para mostrar alerta de sucesso
+
 const mostrarAlertaSucesso = (titulo, mensagem, callback) => {
   Swal.fire({
     title: titulo,
@@ -14,7 +14,7 @@ const mostrarAlertaSucesso = (titulo, mensagem, callback) => {
   });
 };
 
-// Função para mostrar alerta de erro
+
 const mostrarAlertaErro = (mensagem) => {
   Swal.fire({
     title: 'Erro',
@@ -26,7 +26,7 @@ const mostrarAlertaErro = (mensagem) => {
 };
 
 
-// Função para mostrar alerta de confirmação
+
 const mostrarAlertaConfirmacao = (titulo, texto, acao, timeout = null) => {
   try {
     Swal.fire({

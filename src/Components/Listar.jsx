@@ -3,7 +3,6 @@ import { Table, Form, Pagination } from 'react-bootstrap';
 import Buttons from './Buttons/Ações';
 import { api } from '../lib/Axios';
 
-
 const PaginationControls = ({ currentPage, totalItems, itemsPerPage, onPageChange }) => {
   const indexOfLastItem = currentPage * itemsPerPage;
   const pageNumbers = Array.from({ length: Math.ceil(totalItems / itemsPerPage) }, (_, index) => index + 1);
@@ -73,9 +72,7 @@ const sortData = (data, sortColumn, sortDirection) => {
       const isNumberB = !isNaN(columnB) && columnB !== null && columnB !== '';
 
       if (isNumberA && isNumberB) {
-        return sortDirection === 'asc'
-          ? columnA - columnB
-          : columnB - columnA;
+        return sortDirection === 'asc' ? columnA - columnB : columnB - columnA;
       } else {
         return sortDirection === 'asc'
           ? columnA.toString().localeCompare(columnB.toString())
@@ -86,31 +83,27 @@ const sortData = (data, sortColumn, sortDirection) => {
   return sortedData;
 };
 
-const fetchData = (setData, setFilteredData, currentPage, itemsPerPage, sortDirection) => {
+const fetchData = (setData, setFilteredData, setOriginalData, currentPage, itemsPerPage, sortDirection) => {
   try {
-    api(true).get(`/usuario?pageNumber=${currentPage}&pageSize=${itemsPerPage}&sortType=${sortDirection}`)
-      .then(response => response.data.items)
-      .then(items => {
-        const allData = [];
-        const filteredData = [];
-        items.forEach((item, index) => {
-          allData.push(item);
-          filteredData.push(item);
-        });
-        setData(allData);
-        setFilteredData(filteredData);
+    // Colocar paginação
+    api(true).get(`/usuario?pageNumber=${currentPage}&pageSize=1000&sortType=${sortDirection}`)
+      .then(response => {
+        const items = response.data.items;
+        setOriginalData(items);
+        setData(items);
+        setFilteredData(items);
       })
       .catch(error => console.error('Erro:', error));
-
   } catch (error) {
     console.error('Erro ao buscar os dados:', error);
   }
 };
 
 const TableComponent = ({ apiUrl, columns, title, ModalComponents, dados, showHeader = true, showPagination = true }) => {
+  const [originalData, setOriginalData] = useState([]); 
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
-  const [searchTerm, setSearchTerm] = useState();
+  const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [sortColumn, setSortColumn] = useState(null);
@@ -120,9 +113,10 @@ const TableComponent = ({ apiUrl, columns, title, ModalComponents, dados, showHe
   const itemsPerPageOptions = [10, 20, 30, 40];
 
   useEffect(() => {
-    if (data && apiUrl) fetchData(setData, setFilteredData, currentPage, itemsPerPage, sortDirection);
-    if (!apiUrl) {
-      setData(dados)
+    if (apiUrl) {
+      fetchData(setData, setFilteredData, setOriginalData, currentPage, itemsPerPage, sortDirection);
+    } else {
+      setData(dados);
       setFilteredData(dados);
     }
   }, [apiUrl]);
@@ -130,7 +124,13 @@ const TableComponent = ({ apiUrl, columns, title, ModalComponents, dados, showHe
   const handleSearchChange = (event) => {
     const term = event.target.value.trim();
     setSearchTerm(term);
-    handleSearch(data, searchTerm, setFilteredData, setCurrentPage);
+    handleSearch(originalData, term, setFilteredData, setCurrentPage);
+  };
+
+  const resetFilters = () => {
+    setFilteredData(originalData); 
+    setCurrentPage(1);
+    setSearchTerm(''); 
   };
 
   const sortedData = sortData(filteredData, sortColumn, sortDirection);
@@ -157,7 +157,6 @@ const TableComponent = ({ apiUrl, columns, title, ModalComponents, dados, showHe
     setActiveModalIndex(null);
     setSelectedItem(null);
   };
-
 
   return (
     <div className="container">
@@ -190,6 +189,7 @@ const TableComponent = ({ apiUrl, columns, title, ModalComponents, dados, showHe
                   <Form.Control
                     type={'text'}
                     placeholder={'Buscar ...'}
+                    value={searchTerm}
                     onChange={handleSearchChange}
                   />
                 </Form.Group>
@@ -253,7 +253,7 @@ const TableComponent = ({ apiUrl, columns, title, ModalComponents, dados, showHe
                               item[column.value]?.toString()
                             )}
                         </td>
-                      ))}
+                      ))} 
                     </tr>
                   ))}
                 </tbody>
