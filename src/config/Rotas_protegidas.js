@@ -16,9 +16,9 @@ const RoutesProtected = () => {
     const location = useLocation();  
     const currentRoute = getCurrentRoute(routes, location.pathname);  
     if (location.pathname === "/" || !currentRoute || !hasAccess(currentRoute)) {
-        return <Navigate to={location.pathname === "/" ? "/login" : "/pagina-nao-encontrada"} replace />;
+        window.location.pathname = location.pathname === "/" ? "/login" : "/pagina-nao-encontrada";
     }
-    return hasAccess(currentRoute) ? element : <Navigate to="/login" replace={true} />;
+    return hasAccess(currentRoute) ? element : window.location.pathname = "/login";
 };
 
 

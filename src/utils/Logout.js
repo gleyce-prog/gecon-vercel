@@ -5,7 +5,7 @@ const HandleLogout = () =>{
         text: 'Você será deslogado do sistema.',
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonColor: '#3085d6',
+        confirmButtonColor: '#135131',
         cancelButtonColor: '#d33',
         confirmButtonText: 'Sim, sair!',
         cancelButtonText: 'Cancelar'
