@@ -140,7 +140,7 @@ const DynamicModal = ({ show, onHide, fields, post, get, onSubmit, title }) => {
         .then(response => {
           if (!response.ok) {
             return response.json().then(err => {
-              throw new Error(err.description);
+              throw new Error(err);
             });
           }
           return response.json();
@@ -151,7 +151,7 @@ const DynamicModal = ({ show, onHide, fields, post, get, onSubmit, title }) => {
             window.location.reload();
           }, 500);
         })
-        .catch(error => alert(`Erro: ${error.message}`));
+        .catch(error => console.log(error)));
     } catch (error) {
       console.error('Erro ao enviar formulário:', error);
     }
