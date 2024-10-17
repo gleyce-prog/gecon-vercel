@@ -1,35 +1,25 @@
 export default async function handler(req, res) {
-  const { url, data } = req.body; // Use req.body para obter os dados
+  const base = req.url.includes('/api/proxy') ? req.url.replace('/api/proxy/', '') : req.url;
 
-  // Verifique se a URL foi fornecida
-  if (!url) {
-    return res.status(400).json({ error: 'URL não fornecida' });
-  }
+  const endpoint = `http://195.35.40.77:8080/gecon/v1/${base}`;
+  console.log("Endpoint: " + endpoint)
+  console.log("Headers: "+ req.headers)
 
   try {
-    console.log("Fazendo requisição para:", url);
-
-    // Faça a requisição para a URL fornecida
-    const response = await fetch(url, {
-      method: "POST",
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data), // Use os dados fornecidos
+    const response = await fetch(endpoint, {
+      method: req.method,
+      headers: req.headers,
+      body: req.method === 'POST' || req.method === 'PUT' ? JSON.stringify(req.body) : undefined,
     });
 
-    // Obtenha os dados da resposta
-    const responseData = await response.json();
-
-    // Retorne a resposta ao cliente
     if (!response.ok) {
-      // Se a resposta não for ok, retorne um erro
-      return res.status(response.status).json({ error: responseData.error || 'Erro desconhecido' });
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    res.status(200).json({ success: true, data: responseData });
+    const data = await response.json();
+    res.status(response.status).json(data);
   } catch (error) {
-    console.error('Erro ao fazer a requisição:', error);
-    return res.status(500).json({ error: 'Erro interno do servidor' });
+    console.error('Erro na requisição:', error);
+    res.status(500).json({ error: error.message  });
   }
 }
