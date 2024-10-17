@@ -1,36 +1,36 @@
 import React, { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import Spinner from 'react-bootstrap/Spinner';
 import { api } from '../../../lib/Axios';
+import { useNavigate } from 'react-router-dom';
+
 export default function Esqueceu_senha({ rota }) {
   const [email, setEmail] = useState('');
   const [showForgotPasswordModal, setShowForgotPasswordModal] = useState(false);
   const [showEmailSentModal, setShowEmailSentModal] = useState(false);
-
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleCloseForgotPasswordModal = () => setShowForgotPasswordModal(false);
   const handleShowForgotPasswordModal = () => setShowForgotPasswordModal(true);
-
-  const handleCloseEmailSentModal = () => window.location.pathname = rota;
+  const handleCloseEmailSentModal = () => navigate(rota, { replace: true });
   const handleShowEmailSentModal = () => setShowEmailSentModal(true);
 
-  const handleSendEmail = () => {
+  const handleSendEmail = async () => {
+    setLoading(true);
     try {
-      api().put('/usuario/generateCode', {
-        email: email
-      })
-        .then((response) => {
-          if (response.data === true) {
-            localStorage.setItem('email', email);
-            handleCloseForgotPasswordModal()
-            handleShowEmailSentModal();
-          }
-        })
+      const response = await api().put('/usuario/generateCode', { email });
+      if (response.data === true) {
+        localStorage.setItem('email', email);
+        handleCloseForgotPasswordModal();
+        handleShowEmailSentModal();
+      }
     } catch (error) {
       console.error("Erro ao enviar email:", error);
+    } finally {
+      setLoading(false); 
     }
-
-
   };
 
   const handleEmailChange = (event) => {
@@ -41,6 +41,7 @@ export default function Esqueceu_senha({ rota }) {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return re.test(String(email).toLowerCase());
   };
+
   return (
     <>
       <Button variant="link" className="form-check-label" onClick={handleShowForgotPasswordModal}>
@@ -80,11 +81,25 @@ export default function Esqueceu_senha({ rota }) {
         <Modal.Footer className="modal-footer border-0 d-flex justify-content-center">
           <Button
             type="button"
-            className="btn btn-primary btn"
+            className="btn btn-primary"
             onClick={handleSendEmail}
-            disabled={!email || !validateEmail(email)}
+            disabled={!email || !validateEmail(email) || loading} 
           >
-            Enviar link de redefinição
+            {loading ? (
+              <>
+                <Spinner
+                  as="span"
+                  animation="border"
+                  size="sm"
+                  role="status"
+                  aria-hidden="true"
+                  className="me-2"
+                />
+                Enviando...
+              </>
+            ) : (
+              'Enviar link de redefinição'
+            )}
           </Button>
         </Modal.Footer>
       </Modal>
@@ -103,7 +118,7 @@ export default function Esqueceu_senha({ rota }) {
         </Modal.Header>
         <Modal.Body id="contained-modal-title-vcenter">
           <div className="text-center">
-            <i className="bi bi-check-circle text-success" style={{ fontSize: '72px' }}></i> {/* Ícone de sucesso */}
+            <i className="bi bi-check-circle text-success" style={{ fontSize: '72px' }}></i>
             <h5 className="mt-2">Email enviado com sucesso!</h5>
             <p className="mt-2">Por favor, verifique a caixa de entrada do email: {email}</p>
           </div>
