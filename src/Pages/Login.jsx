@@ -28,7 +28,7 @@ export default function Login({ rota }) {
         if (isLoggedIn) {
           setAlert(showSuccessAlert());
           setTimeout(() => {
-            navigate('/home', { replace: true });
+            window.location.pathname = rota
           }, 500);
         } else {
           setAlert(showErrorAlert());
