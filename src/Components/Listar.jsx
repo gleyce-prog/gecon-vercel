@@ -84,30 +84,27 @@ const sortData = (data, sortColumn, sortDirection) => {
 };
 
 const fetchData = (setData, setFilteredData, setOriginalData, currentPage, itemsPerPage, sortDirection) => {
-  const datas = [[]];
+  let currentItems = [];
   try {
     api(true).get(`/usuario?pageNumber=${currentPage}&pageSize=${itemsPerPage}&sortType=${sortDirection}`)
       .then(response => {
 
-        let itens = Math.ceil(response.data.total / itemsPerPage); 
-        datas[0] = response.data.items;
-
+        const totalItems = Math.ceil(response.data.total / itemsPerPage);
+        currentItems = response.data.items;
         const loadNextPages = async () => {
-          for (let i = currentPage + 1; i <= itens; i++) {
-            const response = await api(true).get(`/usuario?pageNumber=${i}&pageSize=${itemsPerPage}&sortType=${sortDirection}`);
-            datas[0] = datas[0].concat(response.data.items);
+          for (let i = 2; i <= totalItems; i++) {
+            const nextResponse = await api(true).get(`/usuario?pageNumber=${i}&pageSize=${itemsPerPage}&sortType=${sortDirection}`);
+            currentItems = currentItems.concat(nextResponse.data.items);
           }
-          setData(datas[0]);
-          setFilteredData(datas[0]);
-          setOriginalData(datas[0]);
-          
-        
-        };
+          const sortedData = [...currentItems].sort((a, b) => a.id - b.id); // Ordena os dados pelo id
+          setData(sortedData);
+          setFilteredData(sortedData);
+          setOriginalData(sortedData);
+        }
         loadNextPages();
-
       })
       .catch(error => console.error('Erro:', error));
-      
+
   } catch (error) {
     console.error('Erro ao buscar os dados:', error);
   }
@@ -267,7 +264,7 @@ const TableComponent = ({ apiUrl, columns, title, ModalComponents, dados, showHe
                               item[column.value]?.toString()
                             )}
                         </td>
-                      ))} 
+                      ))}
                     </tr>
                   ))}
                 </tbody>
