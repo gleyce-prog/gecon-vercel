@@ -60,28 +60,38 @@ const handleSort = (columnValue, sortColumn, sortDirection, setSortColumn, setSo
 
 const sortData = (data, sortColumn, sortDirection) => {
   const sortedData = [...data];
+
   if (sortColumn) {
     sortedData.sort((a, b) => {
       const columnA = a[sortColumn];
       const columnB = b[sortColumn];
 
-      if (columnA === undefined || columnB === undefined) return 0;
+      // Se ambos forem undefined ou null, consideramos iguais
+      if (columnA === undefined || columnA === null) {
+        return columnB === undefined || columnB === null ? 0 : 1;
+      }
+      if (columnB === undefined || columnB === null) {
+        return -1;
+      }
 
-      // Verifique se ambos os valores são números
+
       const isNumberA = !isNaN(columnA) && columnA !== null && columnA !== '';
       const isNumberB = !isNaN(columnB) && columnB !== null && columnB !== '';
 
       if (isNumberA && isNumberB) {
         return sortDirection === 'asc' ? columnA - columnB : columnB - columnA;
       } else {
+
         return sortDirection === 'asc'
           ? columnA.toString().localeCompare(columnB.toString())
           : columnB.toString().localeCompare(columnA.toString());
       }
     });
   }
+
   return sortedData;
 };
+
 
 const fetchData = (setData, setFilteredData, setOriginalData, currentPage, itemsPerPage, sortDirection) => {
   let currentItems = [];
@@ -250,18 +260,10 @@ const TableComponent = ({ apiUrl, columns, title, ModalComponents, dados, showHe
                               }
                             </div>
                           )
-                            : column.value === 'perfil' ? (
-                              Array.isArray(item[column.value]) && item[column.value].map((value, index) => (
-                                value.ativo ? (
-                                  value.id === 1 ? (
-                                    <span>Administrador</span>
-                                  ) : (
-                                    null
-                                  )
-                                ) : (null)
-                              )
-                              )) : (
-                              item[column.value]?.toString()
+                            : (
+                                item[column.value] !== null && item[column.value] !== undefined
+                                ? item[column.value].toString() 
+                                : '' 
                             )}
                         </td>
                       ))}
