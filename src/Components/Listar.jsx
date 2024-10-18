@@ -4,12 +4,11 @@ import Buttons from './Buttons/Ações';
 import { api } from '../lib/Axios';
 
 const PaginationControls = ({ currentPage, totalItems, itemsPerPage, onPageChange }) => {
-  const indexOfLastItem = currentPage * itemsPerPage;
   const pageNumbers = Array.from({ length: Math.ceil(totalItems / itemsPerPage) }, (_, index) => index + 1);
-
+  
   return (
     <div className="d-flex align-items-center justify-content-between">
-      <span>Mostrando {Math.min(indexOfLastItem, totalItems)} de {totalItems} itens</span>
+      <span>Mostrando {Math.min(currentPage * itemsPerPage, totalItems)} de {totalItems} itens</span>
       <Pagination>
         <Pagination.Prev onClick={() => onPageChange(currentPage - 1)} disabled={currentPage === 1} />
         {pageNumbers.map(number => (
@@ -23,84 +22,30 @@ const PaginationControls = ({ currentPage, totalItems, itemsPerPage, onPageChang
   );
 };
 
-const handleSearch = (data, searchTerm, setFilteredData, setCurrentPage) => {
-  const filteredResults = filterData(data, searchTerm || '');
-  setFilteredData(filteredResults);
-  setCurrentPage(1);
-};
-
-const filterData = (data, searchTerm) => {
-  const regex = new RegExp(searchTerm.split(/\s+/).map(term => `(${term})`).join('.*'), 'i');
-  return data.filter(item => {
-    for (let key in item) {
-      const value = item[key];
-      if (value !== null && value !== undefined && regex.test(value.toString())) {
-        return true;
-      }
-    }
-    return false;
-  });
-};
-
-const normalizeString = (str) => {
-  return str
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '');
-};
-
-const handleSort = (columnValue, sortColumn, sortDirection, setSortColumn, setSortDirection) => {
-  if (columnValue === sortColumn) {
-    setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
-  } else {
-    setSortColumn(columnValue);
-    setSortDirection('asc');
-  }
-};
-
-const sortData = (data, sortColumn, sortDirection) => {
-  const sortedData = [...data];
-  if (sortColumn) {
-    sortedData.sort((a, b) => {
-      const columnA = a[sortColumn];
-      const columnB = b[sortColumn];
-
-      if (columnA === undefined || columnB === undefined) return 0;
-
-      // Verifique se ambos os valores são números
-      const isNumberA = !isNaN(columnA) && columnA !== null && columnA !== '';
-      const isNumberB = !isNaN(columnB) && columnB !== null && columnB !== '';
-
-      if (isNumberA && isNumberB) {
-        return sortDirection === 'asc' ? columnA - columnB : columnB - columnA;
-      } else {
-        return sortDirection === 'asc'
-          ? columnA.toString().localeCompare(columnB.toString())
-          : columnB.toString().localeCompare(columnA.toString());
-      }
-    });
-  }
-  return sortedData;
-};
-
-const fetchData = (setData, setFilteredData, setOriginalData, currentPage, itemsPerPage, sortDirection) => {
+const fetchData = async (setData, setFilteredData, setOriginalData, currentPage, itemsPerPage, sortDirection, setLoading) => {
+  setLoading(true);
   try {
-    // Colocar paginação
-    api(true).get(`/usuario?pageNumber=${currentPage}&pageSize=1000&sortType=${sortDirection}`)
-      .then(response => {
-        const items = response.data.items;
-        setOriginalData(items);
-        setData(items);
-        setFilteredData(items);
-      })
-      .catch(error => console.error('Erro:', error));
+    const response = await api(true).get(`/usuario?pageNumber=${currentPage}&pageSize=${itemsPerPage}&sortType=${sortDirection}`);
+    const totalItems = Math.ceil(response.data.totalItems / itemsPerPage);
+    const datas = [response.data.items];
+    
+    for (let page = 2; page <= totalItems; page++) {
+      const nextResponse = await api(true).get(`/usuario?pageNumber=${page}&pageSize=${itemsPerPage}&sortType=${sortDirection}`);
+      datas[0] = datas[0].concat(nextResponse.data.items);
+    }
+
+    setData(datas[0]);
+    setFilteredData(datas[0]);
+    setOriginalData(datas[0]);
+    setLoading(false);
   } catch (error) {
     console.error('Erro ao buscar os dados:', error);
+    setLoading(false);
   }
 };
 
 const TableComponent = ({ apiUrl, columns, title, ModalComponents, dados, showHeader = true, showPagination = true }) => {
-  const [originalData, setOriginalData] = useState([]); 
+  const [originalData, setOriginalData] = useState([]);
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -108,93 +53,90 @@ const TableComponent = ({ apiUrl, columns, title, ModalComponents, dados, showHe
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [sortColumn, setSortColumn] = useState(null);
   const [sortDirection, setSortDirection] = useState('asc');
-  const [activeModalIndex, setActiveModalIndex] = useState(null);
-  const [selectedItem, setSelectedItem] = useState(null);
+  const [loading, setLoading] = useState(false);
   const itemsPerPageOptions = [10, 20, 30, 40];
 
   useEffect(() => {
     if (apiUrl) {
-      fetchData(setData, setFilteredData, setOriginalData, currentPage, itemsPerPage, sortDirection);
+      fetchData(setData, setFilteredData, setOriginalData, currentPage, itemsPerPage, sortDirection, setLoading);
     } else {
       setData(dados);
       setFilteredData(dados);
     }
-  }, [apiUrl]);
+  }, [apiUrl, currentPage, itemsPerPage, sortDirection]);
 
   const handleSearchChange = (event) => {
     const term = event.target.value.trim();
     setSearchTerm(term);
-    handleSearch(originalData, term, setFilteredData, setCurrentPage);
-  };
-
-  const resetFilters = () => {
-    setFilteredData(originalData); 
-    setCurrentPage(1);
-    setSearchTerm(''); 
-  };
-
-  const sortedData = sortData(filteredData, sortColumn, sortDirection);
-
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = sortedData.slice(indexOfFirstItem, indexOfLastItem);
-
-  const handleItemsPerPageChange = (newItemsPerPage) => {
-    setItemsPerPage(newItemsPerPage);
+    const filteredResults = filterData(originalData, term || '');
+    setFilteredData(filteredResults);
     setCurrentPage(1);
   };
+
+  const filterData = (data, searchTerm) => {
+    const regex = new RegExp(searchTerm.split(/\s+/).map(term => `(${term})`).join('.*'), 'i');
+    return data.filter(item => {
+      for (let key in item) {
+        const value = item[key];
+        if (value !== null && value !== undefined && regex.test(value.toString())) {
+          return true;
+        }
+      }
+      return false;
+    });
+  };
+
+  const handleSort = (columnValue) => {
+    if (columnValue === sortColumn) {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortColumn(columnValue);
+      setSortDirection('asc');
+    }
+  };
+
+  const sortData = (data) => {
+    if (sortColumn) {
+      return [...data].sort((a, b) => {
+        const columnA = a[sortColumn];
+        const columnB = b[sortColumn];
+        if (columnA === undefined || columnB === undefined) return 0;
+        return sortDirection === 'asc' ? columnA - columnB : columnB - columnA;
+      });
+    }
+    return data;
+  };
+
+  const sortedData = sortData(filteredData);
+  const currentItems = sortedData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
 
-  const handleShowModal = (index, item = null) => {
-    setActiveModalIndex(index);
-    setSelectedItem(item);
-  };
-
-  const handleCloseModal = () => {
-    setActiveModalIndex(null);
-    setSelectedItem(null);
-  };
-
   return (
     <div className="container">
       <div className="col-xl-12">
-        <div className="card dz-card" id="accordion-three">
+        <div className="card dz-card">
           <div className="card-header flex-wrap d-flex justify-content-between align-items-center">
-            <div>
-              <h4 className="card-title">Listar {title.concat("s")}</h4>
-            </div>
-            <div className="d-flex align-items-center">
-              <Buttons variant="primary" onClick={() => handleShowModal(0)} rota={`/${normalizeString(title)}-cadastrar`} type={'cadastrar'} title={title} />
-            </div>
+            <h4 className="card-title">Listar {title.concat("s")}</h4>
+            <Buttons variant="primary" onClick={() => {}} rota={`/${title.toLowerCase()}-cadastrar`} type={'cadastrar'} title={title} />
           </div>
           {showHeader && (
-            <>
-              <div className="d-flex align-items-center justify-content-between">
-                <Form.Group className="mb-3" style={{ marginLeft: '20px' }}>
-                  <Form.Label>Itens por página</Form.Label>
-                  <Form.Select
-                    onChange={(e) => handleItemsPerPageChange(parseInt(e.target.value))}
-                    style={{ width: '80px', height: '40px' }}
-                  >
-                    {itemsPerPageOptions.map((option, index) => (
-                      <option key={index} value={option}>{option}</option>
-                    ))}
-                  </Form.Select>
-                </Form.Group>
-                <Form.Group className="mb-3" style={{ margin: '0px 20px' }} >
-                  <Form.Label>{'Pesquisar:'}</Form.Label>
-                  <Form.Control
-                    type={'text'}
-                    placeholder={'Buscar ...'}
-                    value={searchTerm}
-                    onChange={handleSearchChange}
-                  />
-                </Form.Group>
-              </div>
-            </>
+            <div className="d-flex align-items-center justify-content-between">
+              <Form.Group className="mb-3" style={{ marginLeft: '20px' }}>
+                <Form.Label>Itens por página</Form.Label>
+                <Form.Select onChange={(e) => { setItemsPerPage(parseInt(e.target.value)); setCurrentPage(1); }} style={{ width: '80px', height: '40px' }}>
+                  {itemsPerPageOptions.map((option, index) => (
+                    <option key={index} value={option}>{option}</option>
+                  ))}
+                </Form.Select>
+              </Form.Group>
+              <Form.Group className="mb-3" style={{ margin: '0px 20px' }}>
+                <Form.Label>{'Pesquisar:'}</Form.Label>
+                <Form.Control type={'text'} placeholder={'Buscar ...'} value={searchTerm} onChange={handleSearchChange} />
+              </Form.Group>
+            </div>
           )}
           <div className="card-body pt-0">
             <div className="table-responsive">
@@ -202,10 +144,8 @@ const TableComponent = ({ apiUrl, columns, title, ModalComponents, dados, showHe
                 <thead>
                   <tr>
                     {columns.map((column, index) => (
-                      <th key={index} onClick={() => handleSort(column.value, sortColumn, sortDirection, setSortColumn, setSortDirection)} style={{ cursor: 'pointer' }}>
-                        {column.label} {sortColumn === column.value && (
-                          <i className={`fas fa-sort-${sortDirection === 'asc' ? 'up' : 'down'}`}></i>
-                        )}
+                      <th key={index} onClick={() => handleSort(column.value)} style={{ cursor: 'pointer' }}>
+                        {column.label} {sortColumn === column.value && <i className={`fas fa-sort-${sortDirection === 'asc' ? 'up' : 'down'}`}></i>}
                       </th>
                     ))}
                   </tr>
@@ -216,44 +156,17 @@ const TableComponent = ({ apiUrl, columns, title, ModalComponents, dados, showHe
                       {columns.map((column, index) => (
                         <td key={index}>
                           {column.value === 'ativo' ? (
-                            item[column.value] === true ? (
-                              <span className="badge light badge-success" style={{ width: "67px" }}>Ativo</span>
-                            ) : (
-                              <span className="badge light badge-danger" style={{ width: "67px" }}>Inativo</span>
-                            )
+                            <span className={`badge light badge-${item[column.value] ? 'success' : 'danger'}`}>{item[column.value] ? 'Ativo' : 'Inativo'}</span>
                           ) : column.value === 'ações' ? (
                             <div className="d-flex">
-                              <Buttons
-                                dado={item}
-                                rota={`/${normalizeString(title)}-pesquisar`}
-                                type={'pesquisar'}
-                                onClick={() => handleShowModal(1, item)}
-                              />
-                              {
-                                item["ativo"] === true ? (
-                                  <Buttons dado={item} rota={`/${normalizeString(title)}-inativar`} type={'inativar'} />
-                                ) :
-                                  (
-                                    <Buttons dado={item} rota={`/${normalizeString(title)}-ativar`} type={'ativar'} />
-                                  )
-                              }
+                              <Buttons dado={item} rota={`/${title.toLowerCase()}-pesquisar`} type={'pesquisar'} />
+                              <Buttons dado={item} rota={`/${item.ativo ? `${title.toLowerCase()}-inativar` : `${title.toLowerCase()}-ativar`}`} type={item.ativo ? 'inativar' : 'ativar'} />
                             </div>
-                          )
-                            : column.value === 'perfil' ? (
-                              Array.isArray(item[column.value]) && item[column.value].map((value, index) => (
-                                value.ativo ? (
-                                  value.id === 1 ? (
-                                    <span>Administrador</span>
-                                  ) : (
-                                    null
-                                  )
-                                ) : (null)
-                              )
-                              )) : (
-                              item[column.value]?.toString()
-                            )}
+                          ) : (
+                            item[column.value]?.toString()
+                          )}
                         </td>
-                      ))} 
+                      ))}
                     </tr>
                   ))}
                 </tbody>
@@ -271,12 +184,7 @@ const TableComponent = ({ apiUrl, columns, title, ModalComponents, dados, showHe
         </div>
       </div>
       {ModalComponents && ModalComponents.map((ModalComponent, index) => (
-        <ModalComponent
-          key={index}
-          show={activeModalIndex === index}
-          onHide={handleCloseModal}
-          item={selectedItem}
-        />
+        <ModalComponent key={index} show={false} onHide={() => {}} item={null} />
       ))}
     </div>
   );
