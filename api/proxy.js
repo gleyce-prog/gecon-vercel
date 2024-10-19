@@ -11,11 +11,6 @@ export default async function handler(req, res) {
       headers: req.headers,
       body: req.method === 'POST' || req.method === 'PUT' ? JSON.stringify(req.body) : undefined,
     });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
     if (!response.ok) {
       const errorText = await response.text();
       try {
@@ -27,7 +22,7 @@ export default async function handler(req, res) {
           return res.status(response.status).json({ error: parsedError.description });
         }
         else {
-          return res.status(response.status).json({ error: parsedError });
+          return res.status(response.status).json({ error: parsedError.title });
         }
       } catch (parseError) {
         console.error('Erro ao fazer parse do erro:', parseError);
@@ -44,6 +39,6 @@ export default async function handler(req, res) {
     return res.status(response.status).json(data);
   } catch (error) {
     console.error('Erro na requisição:', error);
-    res.status(500).json({ error: error.message });
+    res.status(error.status).json({ error: error.message });
   }
 }
