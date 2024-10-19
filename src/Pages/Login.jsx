@@ -31,14 +31,11 @@ export default function Login({ rota }) {
             window.location.pathname = rota
           }, 500);
         } else {
-      console.log(isLoggedIn)
-          setAlert(showErrorAlert(isLoggedIn));
+          setAlert(showErrorAlert(isLoggedIn?.response?.data));
         }
       });
     } catch (error) {
       console.error('Erro ao fazer login:', error);
-      console.log(error)
-
       setAlert(showErrorAlert(error));
     }
   };
@@ -56,7 +53,7 @@ export default function Login({ rota }) {
     
     <div className="alert alert-danger" role="alert">
       <i className="fa-regular fa-circle-xmark" style={{ color: "#e81132", marginRight: '8px' }} />
-      {error?.description? error.description : error?.message}
+      {error?.error ? error.error  : error?.message}
     </div>
   );
 
