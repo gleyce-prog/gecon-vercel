@@ -25,20 +25,19 @@ export default function Login({ rota }) {
 
     try {
       loginApi(email, senha).then((isLoggedIn) => {
-        if (isLoggedIn) {
+        if (isLoggedIn === true) {
           setAlert(showSuccessAlert());
           setTimeout(() => {
             window.location.pathname = rota
           }, 500);
         } else {
-          setAlert(showErrorAlert());
+      console.log(isLoggedIn?.message)
+          setAlert(showErrorAlert(isLoggedIn));
         }
       });
-
-
     } catch (error) {
       console.error('Erro ao fazer login:', error);
-      setAlert(showErrorAlert());
+      setAlert(showErrorAlert(error));
     }
   };
 
@@ -51,10 +50,11 @@ export default function Login({ rota }) {
     </div>
   );
 
-  const showErrorAlert = () => (
+  const showErrorAlert = (error) => (
+    
     <div className="alert alert-danger" role="alert">
       <i className="fa-regular fa-circle-xmark" style={{ color: "#e81132", marginRight: '8px' }} />
-      Usuário ou senha inválidos!
+      {error?.description? error.description : error?.message}
     </div>
   );
 

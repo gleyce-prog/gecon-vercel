@@ -12,7 +12,7 @@ const loginApi = (email, senha) => {
         return !!storage.getItem("token"); 
     }).catch((error) => {
         console.error(error);
-        return false;
+        return error;
     });
 }
 const getWithExpiration = () => {
