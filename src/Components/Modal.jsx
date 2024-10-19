@@ -139,19 +139,21 @@ const DynamicModal = ({ show, onHide, fields, post, get, onSubmit, title }) => {
       })
         .then(response => {
           if (!response.ok) {
-            return response.json().then(err => {
-              throw new Error(err.description || 'Erro desconhecido');
-            });
+            console.log("Response", response)
+            // return response.json().then(err => {
+            //   throw new Error(err.description || 'Erro desconhecido');
+            // });
           }
-          return response.json();
+          // return response.json();
         })
         .then(data => {
-          setTimeout(() => {
-            onHide();
-            window.location.reload();
-          }, 500);
+          console.log("Data: ", data)
+          // setTimeout(() => {
+          //   onHide();
+          //   window.location.reload();
+          // }, 500);
         })
-        .catch(error => error ? window.location.reload() : console.log(error));
+        .catch(error => console.log("Error: ", error));
 
       
   } catch (error) {

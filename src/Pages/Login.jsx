@@ -50,10 +50,9 @@ export default function Login({ rota }) {
   );
 
   const showErrorAlert = (error) => (
-    
     <div className="alert alert-danger" role="alert">
       <i className="fa-regular fa-circle-xmark" style={{ color: "#e81132", marginRight: '8px' }} />
-      {error?.error ? error.error  : error?.message}
+      {error?.error ? "Email ou senha inválidos!" : error?.message}
     </div>
   );
 
