@@ -6,6 +6,7 @@ import { Modal, Form, Row, Col, Button } from 'react-bootstrap';
 import { api } from '../lib/Axios';
 import { url, token } from '../config/Globals';
 import axios from 'axios';
+import { mostrarAlertaSucesso } from '../lib/swal';
 const DynamicModal = ({ show, onHide, fields, post, get, onSubmit, title }) => {
   const [formValues, setFormValues] = useState(
     fields.reduce((acc, field) => {
@@ -149,11 +150,14 @@ const DynamicModal = ({ show, onHide, fields, post, get, onSubmit, title }) => {
         })
         .then(data => {
           if (data) {
-            alert("Usuário cadastrado com sucesso!")
-            setTimeout(() => {
-              onHide();
-              window.location.reload();
-            }, 700);
+            mostrarAlertaSucesso('Sucesso', 'Usuário cadastrado com sucesso!',
+              () => {
+                setTimeout(() => {
+                  onHide();
+                  window.location.reload();
+                }, 700);
+              });
+           
           }
         })
         .catch(error => {
