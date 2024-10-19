@@ -142,7 +142,7 @@ const DynamicModal = ({ show, onHide, fields, post, get, onSubmit, title }) => {
             return response.json().then(err => {
               throw new Error(err.error.mensagem);
             }).catch((err) => {
-              console.log("Erro recebido:", err);
+              throw new Error(err.error.mensagem);
             })
           }
           return response.json();
@@ -158,13 +158,9 @@ const DynamicModal = ({ show, onHide, fields, post, get, onSubmit, title }) => {
         .catch(error => {
           alert(error);
         });
-
-
     } catch (error) {
       console.error('Erro ao enviar formulário:', error);
     }
-
-
   };
 
   const handleNextStep = () => {
