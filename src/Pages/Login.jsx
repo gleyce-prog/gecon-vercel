@@ -37,6 +37,8 @@ export default function Login({ rota }) {
       });
     } catch (error) {
       console.error('Erro ao fazer login:', error);
+      console.log(isLoggedIn)
+
       setAlert(showErrorAlert(error));
     }
   };
