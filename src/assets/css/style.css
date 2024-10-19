@@ -31505,8 +31505,8 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     background-color: #1E1E1E; }
   [data-theme-version="dark"] .custom-tab-1 .nav.nav-tabs {
     border-color: #444444; }
-  [data-theme-version="dark"] .login-form {
-    background-color: #1E1E1E; }
+  /* [data-theme-version="dark"] .login-form {
+    background-color: #1E1E1E; } */
   [data-theme-version="dark"] .accordion-primary .accordion-header.collapsed {
     color: var(--ativa-projetos) !important; }
   [data-theme-version="dark"] .accordion-item {
