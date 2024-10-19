@@ -131,7 +131,7 @@ const TableComponent = ({ apiUrl, columns, title, ModalComponents, dados, showHe
   const [sortDirection, setSortDirection] = useState('asc');
   const [activeModalIndex, setActiveModalIndex] = useState(null);
   const [selectedItem, setSelectedItem] = useState(null);
-  const itemsPerPageOptions = [10, 20, 30, 40];
+  const itemsPerPageOptions = [10, 20, 30, 40, 7];
 
   useEffect(() => {
     if (apiUrl) {
