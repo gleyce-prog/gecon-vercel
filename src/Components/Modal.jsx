@@ -140,7 +140,7 @@ const DynamicModal = ({ show, onHide, fields, post, get, onSubmit, title }) => {
         .then(response => {
           if (!response.ok) {
             return response.json().then(err => {
-              throw new Error(err.mensagem || err.error || 'Erro desconhecido'); // Mensagem de erro correta
+              throw new Error(err); // Mensagem de erro correta
           });
           }
           return response.json();
