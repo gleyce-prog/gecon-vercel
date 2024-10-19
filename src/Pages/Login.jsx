@@ -31,7 +31,7 @@ export default function Login({ rota }) {
             window.location.pathname = rota
           }, 500);
         } else {
-      console.log(isLoggedIn?.message)
+      console.log(isLoggedIn)
           setAlert(showErrorAlert(isLoggedIn));
         }
       });

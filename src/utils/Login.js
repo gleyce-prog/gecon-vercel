@@ -11,9 +11,10 @@ const loginApi = (email, senha) => {
         }
         return !!storage.getItem("token"); 
     }).catch((error) => {
+        console.log(error)
         if(error?.reponse){
-            console.error(error.response?.data?.error);
-            return error.response?.data?.error;
+            console.error(error.response?.description);
+            return error.response?.data?.description;
         }
         return error;
     });
