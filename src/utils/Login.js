@@ -11,8 +11,11 @@ const loginApi = (email, senha) => {
         }
         return !!storage.getItem("token"); 
     }).catch((error) => {
-        console.error(err.response?.data?.error);
-        return err.response?.data?.error;
+        if(error?.reponse){
+            console.error(error.response?.data?.error);
+            return error.response?.data?.error;
+        }
+        return error;
     });
 }
 const getWithExpiration = () => {
