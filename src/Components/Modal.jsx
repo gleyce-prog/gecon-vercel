@@ -144,7 +144,7 @@ const DynamicModal = ({ show, onHide, fields, post, get, onSubmit, title }) => {
             //   throw new Error(err.description || 'Erro desconhecido');
             // });
           }
-          // return response.json();
+          return response.json();
         })
         .then(data => {
           console.log("Data: ", data)
