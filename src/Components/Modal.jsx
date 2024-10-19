@@ -138,11 +138,17 @@ const DynamicModal = ({ show, onHide, fields, post, get, onSubmit, title }) => {
         body: JSON.stringify(data)
       })
         .then(response => {
+          console.log(response);
           if (!response.ok) {
             return response.json().then(err => {
-              throw new Error(err); // Mensagem de erro correta
+              console.log(response.err);
+              console.log(JSON.stringify(err));
+
+              // throw new Error(err); // Mensagem de erro correta
             });
           }
+          console.log(response.data);
+
           return response.json();
         })
         .then(data => {
@@ -152,7 +158,7 @@ const DynamicModal = ({ show, onHide, fields, post, get, onSubmit, title }) => {
             //   window.location.reload();
             // }, 500);}
           }
-    })
+        })
         .catch(error => console.log("Error: ", JSON.stringify(error)));
 
 
