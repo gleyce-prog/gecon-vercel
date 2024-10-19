@@ -3,7 +3,7 @@ export default async function handler(req, res) {
 
   const endpoint = `http://195.35.40.77:8080/gecon/v1/${base}`;
   console.log("Endpoint: " + endpoint)
-  console.log("Headers: "+ req.headers)
+  console.log("Headers: " + req.headers)
 
   try {
     const response = await fetch(endpoint, {
@@ -16,10 +16,34 @@ export default async function handler(req, res) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
+    if (!response.ok) {
+      const errorText = await response.text();
+      try {
+        const parsedError = JSON.parse(errorText);
+        if (parsedError?.message) {
+          return res.status(response.status).json({ error: parsedError.message });
+        }
+        else if (parsedError?.description) {
+          return res.status(response.status).json({ error: parsedError.description });
+        }
+        else {
+          return res.status(response.status).json({ error: parsedError });
+        }
+      } catch (parseError) {
+        console.error('Erro ao fazer parse do erro:', parseError);
+        return res.status(response.status).json({ error: 'Erro desconhecido' });
+      }
+    }
+
     const data = await response.json();
-    res.status(response.status).json(data);
+
+    if (!data) {
+      return res.status(response.status).json({ error: data.Error });
+    }
+
+    return res.status(response.status).json(data);
   } catch (error) {
     console.error('Erro na requisição:', error);
-    res.status(500).json({ error: error.message  });
+    res.status(500).json({ error: error.message });
   }
 }
