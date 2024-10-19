@@ -3,7 +3,7 @@ export default async function handler(req, res) {
 
   const endpoint = `http://195.35.40.77:8080/gecon/v1/${base}`;
   console.log("Endpoint: " + endpoint)
-  console.log("Headers: " + req.headers)
+  console.log("Headers: " + JSON.stringify(req.headers))
 
   try {
     const response = await fetch(endpoint, {
