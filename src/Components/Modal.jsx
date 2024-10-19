@@ -138,28 +138,29 @@ const DynamicModal = ({ show, onHide, fields, post, get, onSubmit, title }) => {
         body: JSON.stringify(data)
       })
         .then(response => {
-          console.log(response);
-          if (!response.ok) {
-            return response.json().then(err => {
-              console.log(response.err);
-              console.log(JSON.stringify(err));
+          // console.log(response);
+          // if (!response.ok) {
+          //   return response.json().then(err => {
+          //     console.log(response.err);
+          //     console.log(JSON.stringify(err));
 
-              // throw new Error(err); // Mensagem de erro correta
-            });
-          }
+          //     // throw new Error(err); // Mensagem de erro correta
+          //   });
+          // }
           console.log(response.data);
 
-          return response.json();
+          console.log(response.json());
+          // setTimeout(() => {
+          //   onHide();
+          //   window.location.reload();
+          // }, 500);}
         })
-        .then(data => {
-          if (data) {
-            // setTimeout(() => {
-            //   onHide();
-            //   window.location.reload();
-            // }, 500);}
+        .catch(error => {
+          if (error?.reponse) {
+            console.log(error.response?.data?.description);
           }
-        })
-        .catch(error => console.log("Error: ", JSON.stringify(error)));
+          console.log(error);
+        });
 
 
     } catch (error) {
