@@ -15,6 +15,7 @@ export default async function handler(req, res) {
       const errorText = await response.text();
       try {
         const parsedError = JSON.parse(errorText);
+        console.log(parsedError)
         if (parsedError?.message) {
           return res.status(response.status).json({ error: parsedError.message });
         }
@@ -22,7 +23,7 @@ export default async function handler(req, res) {
           return res.status(response.status).json({ error: parsedError.description });
         }
         else {
-          return res.status(response.status).json({ error: parsedError.title });
+          return res.status(response.status).json({ error: parsedError });
         }
       } catch (parseError) {
         console.error('Erro ao fazer parse do erro:', parseError);
