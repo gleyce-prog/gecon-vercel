@@ -126,12 +126,12 @@ const TableComponent = ({ apiUrl, columns, title, ModalComponents, dados, showHe
   const [filteredData, setFilteredData] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [itemsPerPage, setItemsPerPage] = useState(7);
   const [sortColumn, setSortColumn] = useState(null);
   const [sortDirection, setSortDirection] = useState('asc');
   const [activeModalIndex, setActiveModalIndex] = useState(null);
   const [selectedItem, setSelectedItem] = useState(null);
-  const itemsPerPageOptions = [10, 20, 30, 40, 7];
+  const itemsPerPageOptions = [7, 10, 20, 30, 40];
 
   useEffect(() => {
     if (apiUrl) {
@@ -261,9 +261,9 @@ const TableComponent = ({ apiUrl, columns, title, ModalComponents, dados, showHe
                             </div>
                           )
                             : (
-                                item[column.value] !== null && item[column.value] !== undefined
-                                ? item[column.value].toString() 
-                                : '' 
+                              item[column.value] !== null && item[column.value] !== undefined
+                                ? item[column.value].toString()
+                                : ''
                             )}
                         </td>
                       ))}

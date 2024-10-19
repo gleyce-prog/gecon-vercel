@@ -149,10 +149,11 @@ const DynamicModal = ({ show, onHide, fields, post, get, onSubmit, title }) => {
         })
         .then(data => {
           if (data) {
+            alert("Usuário cadastrado com sucesso!")
             setTimeout(() => {
               onHide();
               window.location.reload();
-            }, 500);
+            }, 700);
           }
         })
         .catch(error => {

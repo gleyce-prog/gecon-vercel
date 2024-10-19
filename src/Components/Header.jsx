@@ -12,7 +12,7 @@ export default function Header({ props }) {
       <div className="nav-header">
         <a href="/home" className="brand-logo">
           <img className="logo-abbr" src="/images/logo/Símbolo Principal.png" alt="" srcSet="" width={39} height={23} />
-          <img className="brand-title" src="/images/logo/Logotipo Negativo 01.png" width={100} height={20} />
+          <img className="brand-title" src="/images/logo/Logotipo Negativo 01.png" width={100} height={10} />
         </a>
         <div className="nav-control">
           <div className="hamburger">
