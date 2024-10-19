@@ -137,25 +137,27 @@ const DynamicModal = ({ show, onHide, fields, post, get, onSubmit, title }) => {
         },
         body: JSON.stringify(data)
       })
-      .then(response => {
-        if (!response.ok) {
-            // Lida com a resposta de erro
+        .then(response => {
+          if (!response.ok) {
             return response.json().then(err => {
-                // console.log("Erro recebido:", err.error.mensagem); 
-                throw new Error(err.error.mensagem); // Lança um
-            }).catch((err)=> {
-              console.log("Erro recebido:", err); // Imprime o erro
-
+              throw new Error(err.error.mensagem);
+            }).catch((err) => {
+              console.log("Erro recebido:", err);
             })
-        }
-        return response.json(); // Retorna os dados se a resposta for bem-sucedida
-    })
-    .then(data => {
-        console.log("Data:", data); // Aqui você pode trabalhar com os dados recebidos
-    })
-    .catch(error => {
-        console.log("Erro:", error); // Aqui você captura e exibe a mensagem de erro
-    });
+          }
+          return response.json();
+        })
+        .then(data => {
+          if (data) {
+            setTimeout(() => {
+              onHide();
+              window.location.reload();
+            }, 500);
+          }
+        })
+        .catch(error => {
+          alert(error);
+        });
 
 
     } catch (error) {
