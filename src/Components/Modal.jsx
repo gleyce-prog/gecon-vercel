@@ -141,23 +141,24 @@ const DynamicModal = ({ show, onHide, fields, post, get, onSubmit, title }) => {
           if (!response.ok) {
             return response.json().then(err => {
               throw new Error(err); // Mensagem de erro correta
-          });
+            });
           }
           return response.json();
         })
         .then(data => {
-          console.log("Data: ", data)
-          // setTimeout(() => {
-          //   onHide();
-          //   window.location.reload();
-          // }, 500);
-        })
-        .catch(error => console.log("Error: ", JSON.parse(error)));
+          if (data) {
+            // setTimeout(() => {
+            //   onHide();
+            //   window.location.reload();
+            // }, 500);}
+          }
+    })
+        .catch(error => console.log("Error: ", JSON.stringify(error)));
 
-      
-  } catch (error) {
-    console.error('Erro ao enviar formulário:', error);
-  }
+
+    } catch (error) {
+      console.error('Erro ao enviar formulário:', error);
+    }
 
 
   };
