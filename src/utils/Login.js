@@ -11,8 +11,8 @@ const loginApi = (email, senha) => {
         }
         return !!storage.getItem("token"); 
     }).catch((error) => {
-        console.error(error);
-        return error;
+        console.error(err.response?.data?.error);
+        return err.response?.data?.error;
     });
 }
 const getWithExpiration = () => {
