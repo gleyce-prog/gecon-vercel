@@ -140,9 +140,9 @@ const DynamicModal = ({ show, onHide, fields, post, get, onSubmit, title }) => {
         .then(response => {
           if (!response.ok) {
             return response.json().then(err => {
-              throw new Error(err.error.mensagem);
+              alert(err.error.mensagem);
             }).catch((err) => {
-              throw new Error(err.error.mensagem);
+              alert(err.error.mensagem);
             })
           }
           return response.json();
