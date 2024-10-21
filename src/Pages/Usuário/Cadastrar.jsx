@@ -17,11 +17,11 @@ const Cadastrar = ({ show, onHide }) => {
       step: 1,
       required: true,
     },
-    { name: 'cpf', label: 'CPF', type: 'text', placeholder: 'XXX.XXX.XXX-XX', pattern: '\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}', step: 1, text: 'O CPF deve seguir esse padrão XXX.XXX.XXX-XX' },
-    { name: 'status', label: 'STATUS', type: 'select', options: [
+    { name: 'cpf', label: 'CPF', type: 'text', placeholder: 'XXX.XXX.XXX-XX', pattern: '\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}', step: 1, text: 'O CPF deve seguir esse padrão XXX.XXX.XXX-XX', required: true },
+    { name: 'status', label: 'Status', type: 'select', options: [
       { label: "Inativo" , value: 0},
       { label: "Ativo", value: 1}
-    ], step: 1 },
+    ], step: 1 , required: true},
     { name: 'perfil', label: 'Perfil', type: 'multi-select',  placeholder: 'Selecione', step: 1,required: true }
   ];
 
