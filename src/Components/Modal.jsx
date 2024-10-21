@@ -257,6 +257,7 @@ const DynamicModal = ({ show, onHide, fields, post, get, onSubmit, title }) => {
                         onChange={handleChange}
                         placeholder={field.placeholder}
                         disabled={field.disabled}
+                        name={field.name}
                         className={`form-control ${field.disabled ? 'disabled' : ''}`} // Estilo igual ao Form.Control
                         required={field.required}
                         title={field.title}
