@@ -252,13 +252,17 @@ const DynamicModal = ({ show, onHide, fields, post, get, onSubmit, title }) => {
                       ) : field.type === 'custom' ? (
                         field.customComponent
                       ) : field.type === 'mask' ? (
-                        <InputMask 
-                          mask={field.mask}
-                          value={formValues[field.name] ?? ''}
-                          onChange={handleChange}
-                          placeholder={field.placeholder}
-                          disabled={field.disabled}
-                        />
+                        <InputMask
+                        mask={field.mask}
+                        value={formValues[field.name] ?? ''}
+                        onChange={handleChange}
+                        placeholder={field.placeholder}
+                        disabled={field.disabled}
+                        className={`form-control ${field.disabled ? 'disabled' : ''}`} // Estilo igual ao Form.Control
+                        required={field.required}
+                        title={field.title}
+                        style={{ borderRadius: '0.25rem', padding: '0.375rem 0.75rem' }} // Ajustes de estilo se necessário
+                      />
                       ) : (
                         <Form.Control
                           type={field.type}
