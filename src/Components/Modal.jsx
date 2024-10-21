@@ -135,6 +135,14 @@ const DynamicModal = ({ show, onHide, fields, post, get, onSubmit, title }) => {
                 window.location.reload();
               }, 700);
             });
+        //   }
+        // })
+        // .catch(error => {
+        //   alert(error);
+        // })
+        // .finally(() => {
+          setIsSubmitting(false); // Reset submitting status after the request
+        // });
     } catch (error) {
       console.error('Erro ao enviar formulário:', error);
       setIsSubmitting(false); // Reset submitting status on error
