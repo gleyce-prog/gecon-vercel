@@ -1,10 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react'; 
 import Multiselect from 'multiselect-react-dropdown';
 import { Modal, Form, Row, Col, Button } from 'react-bootstrap';
 import { api } from '../lib/Axios';
-import { url, token } from '../config/Globals';
 import axios from 'axios';
-import { mostrarAlertaSucesso } from '../lib/swal';
 
 const DynamicModal = ({ show, onHide, fields, post, get, onSubmit, title }) => {
     const [formValues, setFormValues] = useState(
@@ -17,8 +15,7 @@ const DynamicModal = ({ show, onHide, fields, post, get, onSubmit, title }) => {
     const [valueProfiles, setValueProfiles] = useState([]);
     const [profiles, setProfiles] = useState([]);
     const [currentStep, setCurrentStep] = useState(1);
-    const [isSubmitting, setIsSubmitting] = useState(false); // Estado para controle do botão
-
+    const [isSubmitting, setIsSubmitting] = useState(false); 
     const getFieldSteps = (fields) => {
         const steps = [];
         fields.forEach(field => {
@@ -48,12 +45,10 @@ const DynamicModal = ({ show, onHide, fields, post, get, onSubmit, title }) => {
 
     const fetchAdditionalData = (fieldName, fieldValue) => {
         let dado = fieldName === 'cnpj' ? fieldValue.replace(/[./-]/g, '') : fieldValue;
-
         try {
             axios.get(`${get}${dado}`)
                 .then((response) => {
                     if (response.data) {
-                        onSubmit(response.data);
                         const newFormValues = { ...formValues };
                         for (const [key, value] of Object.entries(response.data)) {
                             const field = fields.find(f => f.name === key);
@@ -69,12 +64,6 @@ const DynamicModal = ({ show, onHide, fields, post, get, onSubmit, title }) => {
             console.error('Erro ao buscar dados adicionais:', error);
         }
     };
-
-    function getFirst(title) {
-        const trimmed = title.trim();
-        const name = trimmed.split(' ');
-        return name[0];
-    }
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -97,9 +86,32 @@ const DynamicModal = ({ show, onHide, fields, post, get, onSubmit, title }) => {
         setValueProfiles(valueProfiles.filter((id) => id !== removedItem.id));
     };
 
+    const validateFields = () => {
+        
+        for (const field of fields) {
+            if (field.required && !formValues[field.name]) {
+                return false; 
+            }
+        }
+
+        
+        const perfilField = fields.find(field => field.name === 'perfil');
+        if (perfilField?.required && valueProfiles.length === 0) {
+            return false;
+        }
+
+        return true;
+    };
+
     const handleSubmit = (e) => {
         e.preventDefault();
-        setIsSubmitting(true); // Desabilitar o botão
+        setIsSubmitting(true);
+
+        if (!validateFields()) {
+            alert('Por favor, preencha todos os campos obrigatórios.');
+            setIsSubmitting(false);
+            return;
+        }
 
         let method = '';
         const data = {};
@@ -108,16 +120,14 @@ const DynamicModal = ({ show, onHide, fields, post, get, onSubmit, title }) => {
             if (key === 'perfil') {
                 data[key] = valueProfiles;
             } else if (value === '') {
-                const field = fields.find(
-                    (field) => field.name === key && (field?.defaultValue ? field.defaultValue : field.value)
-                );
+                const field = fields.find(field => field.name === key && (field?.defaultValue ? field.defaultValue : field.value));
                 if (field) data[key] = field?.defaultValue ?? field?.value;
             } else {
                 data[key] = value;
             }
         }
 
-        switch (getFirst(title)) {
+        switch (title.trim().split(' ')[0]) {
             case 'Cadastro':
                 method = 'POST';
                 break;
@@ -130,55 +140,28 @@ const DynamicModal = ({ show, onHide, fields, post, get, onSubmit, title }) => {
 
         try {
             console.table(data, { tableName: 'Dados enviados!!' });
-const json = JSON.stringify(data, null, 2);
-      const blob = new Blob([json], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = 'dados-enviados.json';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      
-      URL.revokeObjectURL(url);
-            
+            const json = JSON.stringify(data, null, 2);
+            const blob = new Blob([json], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'dados-enviados.json';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
         } catch (error) {
             console.error('Erro ao enviar formulário:', error);
-            setIsSubmitting(false); // Reabilitar o botão em caso de erro
-        }
-    };
-
-    const handleNextStep = () => {
-        if (currentStep < steps.length) {
-            setCurrentStep(currentStep + 1);
-        }
-    };
-
-    const handlePreviousStep = () => {
-        if (currentStep > 1) {
-            setCurrentStep(currentStep - 1);
+            setIsSubmitting(false);
         }
     };
 
     useEffect(() => {
-        const container = document.querySelector('.searchWrapper');
-        if (container) {
-            container.classList.remove('searchWrapper');
-            container.classList.add('form-control');
-        }
-
-        const actions = {
-            perfil: fetchProfiles
-        };
-
+        const actions = { perfil: fetchProfiles };
         fields.forEach((field) => {
             const action = actions[field.name];
-            if (action) {
-                action();
-            }
+            if (action) action();
         });
-
         fields.forEach((field) => {
             if (field.type === 'multi-select' && field.checkeds && profiles) {
                 setValueProfiles(field.checkeds);
@@ -187,14 +170,7 @@ const json = JSON.stringify(data, null, 2);
     }, [fields]);
 
     return (
-        <Modal
-            show={show}
-            onHide={onHide}
-            backdrop="static"
-            size="lg"
-            centered
-            dialogClassName={`modal-${currentStep}`}
-        >
+        <Modal show={show} onHide={onHide} backdrop="static" size="lg" centered>
             <Modal.Header closeButton>
                 <Modal.Title>{title}</Modal.Title>
             </Modal.Header>
@@ -203,87 +179,69 @@ const json = JSON.stringify(data, null, 2);
                     <Row>
                         {fields
                             .filter(field => field.step === currentStep)
-                            .map((field, index) => {
-                                const colWidth = fields.filter(f => f.step === currentStep).length >= 2 ? 6 : 12;
-                                return (
-                                    <Col key={index} xl={colWidth}>
-                                        <Form.Group controlId={`formGrid${field.name}`}>
-                                            <Form.Label>
-                                                {field.label}
-                                                {field.required && <span style={{ color: 'red', marginLeft: '5px' }}>*</span>}
-                                            </Form.Label>
-                                            {field.type === 'select' ? (
-                                                <Form.Control
-    as="select"
-    name={field.name}
-    value={formValues[field.name] ?? ''}
-    onChange={handleChange}
-    required={field.required}
->
-    {field.options.map(option => (
-        <option key={option.value} value={option.value}>
-            {option.label}
-        </option>
-    ))}
-</Form.Control>
-
-                                            ) : field.type === 'multi-select' ? (
-                                                field.label === 'Perfil' && (
-                                                    <Multiselect
-                                                        options={profiles.map((profile) => ({
-                                                            id: profile.id,
-                                                            name: profile.grupo
-                                                        }))}
-                                                        displayValue="name"
-                                                        showCheckbox={true}
-                                                        style={{
-                                                            multiselectContainer: { fontSize: '12px' },
-                                                            optionContainer: { fontSize: '12px' },
-                                                            chips: { fontSize: '12px' }
-                                                        }}
-                                                        emptyRecordMsg={"Sem opções"}
-                                                        onSelect={onSelect}
-                                                        onRemove={onRemove}
-                                                        placeholder={field.placeholder}
-                                                        name={field.name}
-                                                        required={field.required}
-                                                        loading={!profiles ? true : false}
-                                                        hideSelectedList={true}
-                                                        selectedValues={
-                                                            profiles
-                                                                .filter(profile => field?.checkeds?.includes(profile.id))
-                                                                .map(profile => ({ id: profile.id, name: profile.grupo }))
-                                                        }
-                                                    />
-                                                )
-                                            ) : field.type === 'custom' ? (
-                                                field.customComponent
-                                            ) : (
-                                                <Form.Control
-                                                    type={field.type}
-                                                    placeholder={field.placeholder}
-                                                    name={field.name}
-                                                    value={formValues[field.name] ?? ''}
-                                                    onChange={handleChange}
-                                                    required={field.required}
-                                                    pattern={field.pattern}
-                                                    title={field.title}
-                                                    disabled={field.disabled}
-                                                />
-                                            )}
-                                        </Form.Group>
-                                    </Col>
-                                );
-                            })}
+                            .map((field, index) => (
+                                <Col key={index} xl={fields.filter(f => f.step === currentStep).length >= 2 ? 6 : 12}>
+                                    <Form.Group controlId={`formGrid${field.name}`}>
+                                        <Form.Label>
+                                            {field.label}
+                                            {field.required && <span style={{ color: 'red', marginLeft: '5px' }}>*</span>}
+                                        </Form.Label>
+                                        {field.type === 'select' ? (
+                                            <Form.Control
+                                                as="select"
+                                                name={field.name}
+                                                value={formValues[field.name] ?? ''}
+                                                onChange={handleChange}
+                                                required={field.required}
+                                            >
+                                                {field.options.map(option => (
+                                                    <option key={option.value} value={option.value}>
+                                                        {option.label}
+                                                    </option>
+                                                ))}
+                                            </Form.Control>
+                                        ) : field.type === 'multi-select' && field.label === 'Perfil' ? (
+                                            <Multiselect
+                                                options={profiles.map(profile => ({ id: profile.id, name: profile.grupo }))}
+                                                displayValue="name"
+                                                showCheckbox={true}
+                                                style={{
+                                                    multiselectContainer: { fontSize: '12px' },
+                                                    optionContainer: { fontSize: '12px' },
+                                                    chips: { fontSize: '12px' }
+                                                }}
+                                                emptyRecordMsg={"Sem opções"}
+                                                onSelect={onSelect}
+                                                onRemove={onRemove}
+                                                placeholder={field.placeholder}
+                                                name={field.name}
+                                                required={field.required}
+                                                loading={!profiles}
+                                                hideSelectedList={true}
+                                                selectedValues={profiles.filter(profile => field?.checkeds?.includes(profile.id)).map(profile => ({ id: profile.id, name: profile.grupo }))}
+                                            />
+                                        ) : (
+                                            <Form.Control
+                                                type={field.type}
+                                                placeholder={field.placeholder}
+                                                name={field.name}
+                                                value={formValues[field.name] ?? ''}
+                                                onChange={handleChange}
+                                                required={field.required}
+                                            />
+                                        )}
+                                    </Form.Group>
+                                </Col>
+                            ))}
                     </Row>
                     <div className="mt-3 d-flex justify-content-end">
                         {currentStep > 1 && (
-                            <Button variant="secondary" onClick={handlePreviousStep} className="me-2">
+                            <Button variant="secondary" onClick={() => setCurrentStep(currentStep - 1)} className="me-2">
                                 Voltar
                             </Button>
                         )}
                         {currentStep < steps.length ? (
-                            <Button variant="primary" onClick={handleNextStep}>
+                            <Button variant="primary" onClick={() => setCurrentStep(currentStep + 1)}>
                                 Próximo
                             </Button>
                         ) : (
