@@ -131,40 +131,7 @@ const DynamicModal = ({ show, onHide, fields, post, get, onSubmit, title }) => {
         try {
             console.table(data, { tableName: 'Dados enviados!!' });
 
-            fetch(`https://painel-ativa.vercel.app/api/proxy/${post}`, {
-                method: `${method}`,
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data)
-            })
-            .then(response => {
-                if (!response.ok) {
-                    return response.json().then(err => {
-                        alert(err.error.mensagem);
-                    }).catch((err) => {
-                        alert(err.error.mensagem);
-                    });
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data) {
-                    mostrarAlertaSucesso('Sucesso', 'Usuário cadastrado com sucesso!', () => {
-                        onHide();
-                        setTimeout(() => {
-                            window.location.reload();
-                        }, 700);
-                    });
-                }
-            })
-            .catch(error => {
-                alert(error);
-            })
-            .finally(() => {
-                setIsSubmitting(false); // Reabilitar o botão após o envio
-            });
+            
         } catch (error) {
             console.error('Erro ao enviar formulário:', error);
             setIsSubmitting(false); // Reabilitar o botão em caso de erro
@@ -236,14 +203,20 @@ const DynamicModal = ({ show, onHide, fields, post, get, onSubmit, title }) => {
                                             </Form.Label>
                                             {field.type === 'select' ? (
                                                 <Form.Control
-                                                    as="select"
-                                                    name={field.name}
-                                                    value={formValues[field.name] ?? ''}
-                                                    onChange={handleChange}
-                                                    required={field.required}
-                                                >
-                                                    <option value="" disabled>Selecione</option>
-                                                </Form.Control>
+    as="select"
+    name={field.name}
+    value={formValues[field.name] ?? ''}
+    onChange={handleChange}
+    required={field.required}
+>
+    <option value="" disabled>Selecione</option>
+    {field.options.map(option => (
+        <option key={option.value} value={option.value}>
+            {option.label}
+        </option>
+    ))}
+</Form.Control>
+
                                             ) : field.type === 'multi-select' ? (
                                                 field.label === 'Perfil' && (
                                                     <Multiselect
