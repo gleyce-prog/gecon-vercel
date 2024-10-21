@@ -150,7 +150,7 @@ const DynamicModal = ({ show, onHide, fields, post, get, onSubmit, title }) => {
       //   })
       //   .then(data => {
       //     if (data) {
-            mostrarAlertaSucesso(`Usuário ${(title.trim().split(' ')[0]) === "Cadastro" ? "cadastrado" : "editado"} com sucesso!`, 'Sucesso', () => {              onHide();
+            mostrarAlertaSucesso('Sucesso', `Usuário ${(title.trim().split(' ')[0]) === "Cadastro" ? "cadastrado" : "editado"} com sucesso!`, () => {              onHide();
               setTimeout(() => {
                 window.location.reload();
               }, 700);
