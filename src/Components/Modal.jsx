@@ -3,6 +3,7 @@ import Multiselect from 'multiselect-react-dropdown';
 import { Modal, Form, Row, Col, Button } from 'react-bootstrap';
 import { api } from '../lib/Axios';
 import { url, token } from '../config/Globals';
+import InputMask from 'react-input-mask';
 import axios from 'axios';
 import { mostrarAlertaSucesso } from '../lib/swal';
 
