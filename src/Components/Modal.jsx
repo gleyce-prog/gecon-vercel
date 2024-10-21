@@ -218,17 +218,29 @@ const DynamicModal = ({ show, onHide, fields, post, get, onSubmit, title }) => {
                                                 required={field.required}
                                                 loading={!profiles}
                                                 hideSelectedList={true}
-                                                selectedValues={profiles.filter(profile => field?.checkeds?.includes(profile.id)).map(profile => ({ id: profile.id, name: profile.grupo }))}
-                                            />
-                                        ) : (
-                                            <Form.Control
-                                                type={field.type}
-                                                placeholder={field.placeholder}
-                                                name={field.name}
-                                                value={formValues[field.name] ?? ''}
-                                                onChange={handleChange}
-                                                required={field.required}
-                                            />
+                                                selectedValues={
+                              profiles
+                                .filter(profile => field?.checkeds?.includes(profile.id))
+                                .map(profile => ({ id: profile.id, name: profile.grupo }))
+                            }
+
+                          />
+                        )
+                      ) : field.type === 'custom' ? (
+                        field.customComponent
+                      ) : (
+                        <Form.Control
+                          type={field.type}
+                          placeholder={field.placeholder}
+                          name={field.name}
+                          value={formValues[field.name] ?? ''}
+                          onChange={handleChange}
+                          required={field.required}
+                          pattern={field.pattern}
+                          title={field.title}
+                          disabled={field.disabled}
+                        />
+                 
                                         )}
                                     </Form.Group>
                                 </Col>
