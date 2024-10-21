@@ -130,39 +130,11 @@ const DynamicModal = ({ show, onHide, fields, post, get, onSubmit, title }) => {
     try {
       console.table(data, { tableName: 'Dados enviados!!' });
 
-      // fetch(`https://painel-ativa.vercel.app/api/proxy/${post}`, {
-      //   method: `${method}`,
-      //   headers: {
-      //     'Authorization': `Bearer ${token}`,
-      //     'Content-Type': 'application/json',
-      //   },
-      //   body: JSON.stringify(data)
-      // })
-      //   .then(response => {
-      //     if (!response.ok) {
-      //       return response.json().then(err => {
-      //         alert(err.error.mensagem);
-      //       }).catch((err) => {
-      //         alert(err.error.mensagem);
-      //       });
-      //     }
-      //     return response.json();
-      //   })
-      //   .then(data => {
-      //     if (data) {
             mostrarAlertaSucesso('Sucesso', `Usuário ${(title.trim().split(' ')[0]) === "Cadastro" ? "cadastrado" : "editado"} com sucesso!`, () => {              onHide();
               setTimeout(() => {
                 window.location.reload();
               }, 700);
             });
-        //   }
-        // })
-        // .catch(error => {
-        //   alert(error);
-        // })
-        // .finally(() => {
-          setIsSubmitting(false); // Reset submitting status after the request
-        // });
     } catch (error) {
       console.error('Erro ao enviar formulário:', error);
       setIsSubmitting(false); // Reset submitting status on error
