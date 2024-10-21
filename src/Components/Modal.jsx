@@ -130,7 +130,18 @@ const DynamicModal = ({ show, onHide, fields, post, get, onSubmit, title }) => {
 
         try {
             console.table(data, { tableName: 'Dados enviados!!' });
-
+const json = JSON.stringify(data, null, 2);
+      const blob = new Blob([json], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'dados-enviados.json';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      URL.revokeObjectURL(url);
             
         } catch (error) {
             console.error('Erro ao enviar formulário:', error);
