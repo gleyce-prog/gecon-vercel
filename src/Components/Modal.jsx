@@ -209,7 +209,6 @@ const DynamicModal = ({ show, onHide, fields, post, get, onSubmit, title }) => {
     onChange={handleChange}
     required={field.required}
 >
-    <option value="" disabled>Selecione</option>
     {field.options.map(option => (
         <option key={option.value} value={option.value}>
             {option.label}
