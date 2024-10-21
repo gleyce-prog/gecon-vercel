@@ -152,8 +152,8 @@ const DynamicModal = ({ show, onHide, fields, post, get, onSubmit, title }) => {
           if (data) {
             mostrarAlertaSucesso('Sucesso', 'Usuário cadastrado com sucesso!',
               () => {
+                onHide();
                 setTimeout(() => {
-                  onHide();
                   window.location.reload();
                 }, 700);
               });
