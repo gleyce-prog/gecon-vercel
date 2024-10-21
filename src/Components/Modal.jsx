@@ -254,7 +254,6 @@ const DynamicModal = ({ show, onHide, fields, post, get, onSubmit, title }) => {
                       ) : field.type === 'mask' ? (
                         <InputMask
                         mask={field.mask}
-                        value={formValues[field.name] ?? ''}
                         onChange={handleChange}
                         placeholder={field.placeholder}
                         disabled={field.disabled}
