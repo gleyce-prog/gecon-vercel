@@ -6,8 +6,8 @@ const Editar = ({ show, onHide, item }) => {
   const [profiles, setProfiles] = useState();
   useEffect(() => {
     setFormData(item);
-    console.log(item);
     if (item) {
+    console.log(item);
       api(true).get(`/grupoAcesso/getByUuidUsuario/${item.uuid}`)
         .then(response => response.data)
         .then(data =>  setProfiles(data))
