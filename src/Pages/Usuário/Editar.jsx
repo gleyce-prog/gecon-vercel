@@ -9,9 +9,24 @@ const Editar = ({ show, onHide, item }) => {
     if (item) {
       api(true).get(`/grupoAcesso/getByUuidUsuario/${item.uuid}`)
         .then(response => response.data)
-        .then(data => setProfiles(data))
+        .then(data => {
+              const json = JSON.stringify(data, null, 2);
+      const blob = new Blob([json], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'dados-enviados.json';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      URL.revokeObjectURL(url);
+          setProfiles(data)
+        })
         .catch(error => console.error('Erro:', error));
     }
+
     }, [item]);
 
   const fields = [
