@@ -1,5 +1,3 @@
-
-
 import React, { useEffect, useState } from 'react';
 import Multiselect from 'multiselect-react-dropdown';
 import { Modal, Form, Row, Col, Button } from 'react-bootstrap';
@@ -7,6 +5,7 @@ import { api } from '../lib/Axios';
 import { url, token } from '../config/Globals';
 import axios from 'axios';
 import { mostrarAlertaSucesso } from '../lib/swal';
+
 const DynamicModal = ({ show, onHide, fields, post, get, onSubmit, title }) => {
   const [formValues, setFormValues] = useState(
     fields.reduce((acc, field) => {
@@ -17,7 +16,8 @@ const DynamicModal = ({ show, onHide, fields, post, get, onSubmit, title }) => {
   const [valueProfiles, setValueProfiles] = useState([]);
   const [profiles, setProfiles] = useState([]);
   const [currentStep, setCurrentStep] = useState(1);
-  // Função para obter etapas distintas
+  const [isSubmitting, setIsSubmitting] = useState(false); // New state for submission status
+
   const getFieldSteps = (fields) => {
     const steps = [];
     fields.forEach(field => {
@@ -34,11 +34,10 @@ const DynamicModal = ({ show, onHide, fields, post, get, onSubmit, title }) => {
 
   const steps = getFieldSteps(fields);
 
-  // Funções para buscar dados
-
   const fetchProfiles = () => {
     try {
-      api(true).get('/grupoAcesso/getList')
+      api(true)
+        .get('/grupoAcesso/getList')
         .then(response => response.data)
         .then(data => setProfiles(data))
         .catch(error => console.error('Erro:', error));
@@ -47,14 +46,10 @@ const DynamicModal = ({ show, onHide, fields, post, get, onSubmit, title }) => {
     }
   };
 
-
-  // Função para preencher campos automaticamente
   const fetchAdditionalData = (fieldName, fieldValue) => {
     let dado = fieldName === 'cnpj' ? fieldValue.replace(/[./-]/g, '') : fieldValue;
     try {
-      axios.get(
-        `${get}${dado}`
-      ).then((response) => {
+      axios.get(`${get}${dado}`).then((response) => {
         if (response.data) {
           onSubmit(response.data);
           const newFormValues = { ...formValues };
@@ -67,17 +62,18 @@ const DynamicModal = ({ show, onHide, fields, post, get, onSubmit, title }) => {
           setFormValues(newFormValues);
           onSubmit(response.data);
         }
-      })
+      });
     } catch (error) {
       console.error('Erro ao buscar dados adicionais:', error);
     }
   };
+
   function getFirst(title) {
     const trimmed = title.trim();
     const name = trimmed.split(' ');
     return name[0];
   }
-  // Manipulação de eventos
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormValues(prevValues => ({
@@ -90,6 +86,7 @@ const DynamicModal = ({ show, onHide, fields, post, get, onSubmit, title }) => {
       fetchAdditionalData(name, value);
     }
   };
+
   const onSelect = (selectedList, selectedItem) => {
     console.log(selectedList);
     setValueProfiles(selectedList.sort((a, b) => a.id - b.id).map((item) => item.id));
@@ -98,10 +95,12 @@ const DynamicModal = ({ show, onHide, fields, post, get, onSubmit, title }) => {
   const onRemove = (selectedList, removedItem) => {
     setValueProfiles(valueProfiles.filter((id) => id !== removedItem.id));
   };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    let method = '';
+    setIsSubmitting(true); // Set submitting to true
 
+    let method = '';
     const data = {};
     for (const [key, value] of Object.entries(formValues)) {
       if (key === 'perfil') {
@@ -130,41 +129,42 @@ const DynamicModal = ({ show, onHide, fields, post, get, onSubmit, title }) => {
     try {
       console.table(data, { tableName: 'Dados enviados!!' });
 
-      fetch(`https://painel-ativa.vercel.app/api/proxy/${post}`, {
-        method: `${method}`,
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data)
-      })
-        .then(response => {
-          if (!response.ok) {
-            return response.json().then(err => {
-              alert(err.error.mensagem);
-            }).catch((err) => {
-              alert(err.error.mensagem);
-            })
-          }
-          return response.json();
-        })
-        .then(data => {
-          if (data) {
-            mostrarAlertaSucesso('Sucesso', 'Usuário cadastrado com sucesso!',
-              () => {
-                onHide();
-                setTimeout(() => {
-                  window.location.reload();
-                }, 700);
-              });
-           
-          }
-        })
-        .catch(error => {
-          alert(error);
-        });
+      // fetch(`https://painel-ativa.vercel.app/api/proxy/${post}`, {
+      //   method: `${method}`,
+      //   headers: {
+      //     'Authorization': `Bearer ${token}`,
+      //     'Content-Type': 'application/json',
+      //   },
+      //   body: JSON.stringify(data)
+      // })
+      //   .then(response => {
+      //     if (!response.ok) {
+      //       return response.json().then(err => {
+      //         alert(err.error.mensagem);
+      //       }).catch((err) => {
+      //         alert(err.error.mensagem);
+      //       });
+      //     }
+      //     return response.json();
+      //   })
+      //   .then(data => {
+      //     if (data) {
+            mostrarAlertaSucesso(`Usuário ${(title.trim().split(' ')[0]) === "Cadastro" ? "cadastrado" : "editado"} com sucesso!`, 'Sucesso', () => {              onHide();
+              setTimeout(() => {
+                window.location.reload();
+              }, 700);
+            });
+        //   }
+        // })
+        // .catch(error => {
+        //   alert(error);
+        // })
+        // .finally(() => {
+          setIsSubmitting(false); // Reset submitting status after the request
+        // });
     } catch (error) {
       console.error('Erro ao enviar formulário:', error);
+      setIsSubmitting(false); // Reset submitting status on error
     }
   };
 
@@ -187,7 +187,6 @@ const DynamicModal = ({ show, onHide, fields, post, get, onSubmit, title }) => {
       container.classList.add('form-control');
     }
 
-    // Definindo ações para campos que necessitam de busca de dados
     const actions = {
       perfil: fetchProfiles
     };
@@ -199,15 +198,12 @@ const DynamicModal = ({ show, onHide, fields, post, get, onSubmit, title }) => {
       }
     });
 
-
     fields.forEach((field) => {
       if (field.type === 'multi-select' && field.checkeds && profiles) {
         setValueProfiles(field.checkeds);
       }
     });
-
   }, [fields]);
-
 
   return (
     <Modal
@@ -243,7 +239,11 @@ const DynamicModal = ({ show, onHide, fields, post, get, onSubmit, title }) => {
                           onChange={handleChange}
                           required={field.required}
                         >
-                          <option value="" disabled>Selecione</option>
+                          {field.options.map((option) => (
+                            <option key={option.value} value={option.value}>
+                              {option.label}
+                            </option>
+                          ))}
                         </Form.Control>
                       ) : field.type === 'multi-select' ? (
                         field.label === 'Perfil' && (
@@ -272,11 +272,18 @@ const DynamicModal = ({ show, onHide, fields, post, get, onSubmit, title }) => {
                                 .filter(profile => field?.checkeds?.includes(profile.id))
                                 .map(profile => ({ id: profile.id, name: profile.grupo }))
                             }
-
                           />
                         )
                       ) : field.type === 'custom' ? (
                         field.customComponent
+                      ) : field.type === 'mask' ? (  
+                        <MaskedInput
+                          mask={field.mask} 
+                          value={formValues[field.name] ?? ''}
+                          onChange={handleChange}
+                          placeholder={field.placeholder}
+                          disabled={field.disabled}
+                        />
                       ) : (
                         <Form.Control
                           type={field.type}
@@ -306,8 +313,8 @@ const DynamicModal = ({ show, onHide, fields, post, get, onSubmit, title }) => {
                 Próximo
               </Button>
             ) : (
-              <Button variant="primary" type="submit">
-                Enviar
+              <Button variant="primary" type="submit" disabled={isSubmitting}>
+                {isSubmitting ? 'Enviado' : 'Enviar'}
               </Button>
             )}
           </div>

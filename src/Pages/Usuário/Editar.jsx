@@ -7,14 +7,17 @@ const Editar = ({ show, onHide, item }) => {
   useEffect(() => {
     setFormData(item);
     if (item) {
+    console.log(item);
       api(true).get(`/grupoAcesso/getByUuidUsuario/${item.uuid}`)
         .then(response => response.data)
-        .then(data => setProfiles(data))
+        .then(data =>  setProfiles(data))
         .catch(error => console.error('Erro:', error));
     }
+
     }, [item]);
 
   const fields = [
+    { name : 'uuid', label: 'UUID', type: 'text', value: formData?.uuid, placeholder: formData?.uuid, disabled: true, step: 1 },
     { name: 'nome', label: 'Nome', type: 'text', defaultValue: formData?.nome, placeholder: formData?.nome, step: 1 },
     { name: 'email', label: 'Email', type: 'email', defaultValue: formData?.email, placeholder: formData?.email, step: 1 },
     { name: 'cpf', label: 'CPF', type: 'text', value: formData?.cpf, disabled: true, step: 1 },

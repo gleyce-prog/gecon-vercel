@@ -42,7 +42,7 @@ const mostrarAlertaConfirmacao = (titulo, texto, acao, timeout = null) => {
       if (result.isConfirmed && acao) {
         acao().then((response) => {
           if (response.status === 200) {
-            mostrarAlertaSucesso('Sucesso', 'Ação realizada com sucesso.',
+            mostrarAlertaSucesso('Ação realizada com sucesso.', 'Sucesso',
               () => {
                 setTimeout(() => {
                   window.location.reload();

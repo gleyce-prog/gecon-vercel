@@ -5,8 +5,8 @@ import { api } from '../../lib/Axios';
 const Cadastrar = ({ show, onHide }) => {
 
   const fields = [
-    { name: 'nome', label: 'Nome', type: 'text', placeholder: 'Nome', step: 1, required: true,},
-    { name: 'email', label: 'Email', type: 'email', placeholder: 'Email', step: 1 , required: true,},
+    { name: 'nome', label: 'Nome', type: 'text', placeholder: 'Nome', step: 1, required: true, },
+    { name: 'email', label: 'Email', type: 'email', placeholder: 'Email', step: 1, required: true, },
     {
       name: 'senha',
       label: 'Senha',
@@ -17,8 +17,14 @@ const Cadastrar = ({ show, onHide }) => {
       step: 1,
       required: true,
     },
-    { name: 'cpf', label: 'CPF', type: 'text', placeholder: 'XXX.XXX.XXX-XX', pattern: '\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}', step: 1, text: 'O CPF deve seguir esse padrão XXX.XXX.XXX-XX' },
-    { name: 'perfil', label: 'Perfil', type: 'multi-select',  placeholder: 'Selecione', step: 1,required: true }
+    { name: 'cpf', label: 'CPF', type: 'mask', step: 1, mask: '999.999.999-99', required: true },
+    {
+      name: 'status', label: 'Status', type: 'select', options: [
+        { label: "Inativo", value: 0 },
+        { label: "Ativo", value: 1 }
+      ], step: 1, required: true
+    },
+    { name: 'perfil', label: 'Perfil', type: 'multi-select', placeholder: 'Selecione', step: 1, required: true }
   ];
 
   return (
