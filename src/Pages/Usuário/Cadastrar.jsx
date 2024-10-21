@@ -18,9 +18,9 @@ const Cadastrar = ({ show, onHide }) => {
       required: true,
     },
     { name: 'cpf', label: 'CPF', type: 'text', placeholder: 'XXX.XXX.XXX-XX', pattern: '\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}', step: 1, text: 'O CPF deve seguir esse padrão XXX.XXX.XXX-XX' },
-    { name : 'status', label: 'STATUS', type: 'select', options: [
-      {name: "Inativo" , value: 0},
-      {name: "Ativo", value: 1}
+    { name: 'status', label: 'STATUS', type: 'select', options: [
+      { label: "Inativo" , value: 0},
+      { label: "Ativo", value: 1}
     ], step: 1 },
     { name: 'perfil', label: 'Perfil', type: 'multi-select',  placeholder: 'Selecione', step: 1,required: true }
   ];
