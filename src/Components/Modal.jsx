@@ -101,6 +101,18 @@ const DynamicModal = ({ show, onHide, fields, post, get, onSubmit, title }) => {
 
     const method = title.startsWith('Cadastro') ? 'POST' : title.startsWith('Editar') ? 'PUT' : '';
 
+  const blob = new Blob([data], { type: 'application/octet-stream' });
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = filename; // Nome do arquivo
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
+
+// Exemplo de uso
+const data = 'Conteúdo do seu arquivo aqui'; // Substitua pelo seu dado
+downloadFile(data, 'meu_arquivo.txt');
 
     
   };
