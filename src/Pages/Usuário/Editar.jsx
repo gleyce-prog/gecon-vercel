@@ -6,11 +6,7 @@ const Editar = ({ show, onHide, item }) => {
   const [profiles, setProfiles] = useState();
   useEffect(() => {
     setFormData(item);
-    if (item) {
-      api(true).get(`/grupoAcesso/getByUuidUsuario/${item.uuid}`)
-        .then(response => response.data)
-        .then(data => {
-              const json = JSON.stringify(data, null, 2);
+    const json = JSON.stringify(item, null, 2);
       const blob = new Blob([json], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
       
@@ -22,8 +18,10 @@ const Editar = ({ show, onHide, item }) => {
       document.body.removeChild(link);
       
       URL.revokeObjectURL(url);
-          setProfiles(data)
-        })
+    if (item) {
+      api(true).get(`/grupoAcesso/getByUuidUsuario/${item.uuid}`)
+        .then(response => response.data)
+        .then(data =>  setProfiles(data))
         .catch(error => console.error('Erro:', error));
     }
 
