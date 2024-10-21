@@ -3,7 +3,7 @@ import Multiselect from 'multiselect-react-dropdown';
 import { Modal, Form, Row, Col, Button } from 'react-bootstrap';
 import { api } from '../lib/Axios';
 import { url, token } from '../config/Globals';
-import InputMask from 'react-input-mask';
+import InputMask  from 'react-input-mask';
 import axios from 'axios';
 import { mostrarAlertaSucesso } from '../lib/swal';
 
@@ -252,7 +252,7 @@ const DynamicModal = ({ show, onHide, fields, post, get, onSubmit, title }) => {
                       ) : field.type === 'custom' ? (
                         field.customComponent
                       ) : field.type === 'mask' ? (
-                        <InputMask
+                        <InputMask 
                           mask={field.mask}
                           value={formValues[field.name] ?? ''}
                           onChange={handleChange}
