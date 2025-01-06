@@ -19,7 +19,8 @@ const Editar = ({ show, onHide, item }) => {
     { name : 'uuid', label: 'UUID', type: 'text', value: formData?.uuid, placeholder: formData?.uuid, disabled: true, step: 1 },
     { name: 'nome', label: 'Nome', type: 'text', defaultValue: formData?.nome, placeholder: formData?.nome, step: 1 },
     { name: 'email', label: 'Email', type: 'email', defaultValue: formData?.email, placeholder: formData?.email, step: 1 },
-    { name: 'cpf', label: 'CPF', type: 'text', value: formData?.cpf, disabled: true, step: 1 },
+    {  name: 'cpf', label: 'CPF', type: 'mask', step: 1, mask: '999.999.999-99', value: formData?.cpf, disabled: true, step: 1 },
+      // name: 'cpf', label: 'CPF', type: 'text', value: formData?.cpf, disabled: true, step: 1 },
     {
       name: 'perfil', label: 'Perfil', type: 'multi-select', placeholder: 'Selecione', step: 1, checkeds: profiles?.map((profile)=> {return profile.id})
     },

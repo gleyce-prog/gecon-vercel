@@ -1,0 +1,87 @@
+[
+    {
+      "id": 1,
+      "cnpj": "12.345.678/0001-90",
+      "nome": "Empresa A LTDA",
+      "email": "contato@empresaA.com.br",
+      "status": "Ativo"
+    },
+    {
+      "id": 2,
+      "cnpj": "23.456.789/0001-12",
+      "nome": "Empresa B S.A.",
+      "email": "contato@empresaB.com.br",
+      "status": "Ativo"
+    },
+    {
+      "id": 3,
+      "cnpj": "34.567.890/0001-23",
+      "nome": "Empresa C Comércio",
+      "email": "suporte@empresaC.com.br",
+      "status": "Inativo"
+    },
+    {
+      "id": 4,
+      "cnpj": "45.678.901/0001-34",
+      "nome": "Indústria D",
+      "email": "vendas@industriaD.com.br",
+      "status": "Ativo"
+    },
+    {
+      "id": 5,
+      "cnpj": "56.789.012/0001-45",
+      "nome": "Tecnologia E Ltda.",
+      "email": "info@tecnologiaE.com.br",
+      "status": "Pendente"
+    },
+    {
+      "id": 6,
+      "cnpj": "67.890.123/0001-56",
+      "nome": "Consultoria F",
+      "email": "contato@consultoriaF.com.br",
+      "status": "Ativo"
+    },
+    {
+      "id": 7,
+      "cnpj": "78.901.234/0001-67",
+      "nome": "Logística G",
+      "email": "logisticaG@empresa.com.br",
+      "status": "Inativo"
+    },
+    {
+      "id": 8,
+      "cnpj": "89.012.345/0001-78",
+      "nome": "Distribuidora H",
+      "email": "atendimento@distribuidoraH.com.br",
+      "status": "Ativo"
+    },
+    {
+      "id": 9,
+      "cnpj": "90.123.456/0001-89",
+      "nome": "Startup I",
+      "email": "suporte@startupI.com.br",
+      "status": "Pendente"
+    },
+    {
+      "id": 10,
+      "cnpj": "01.234.567/0001-90",
+      "nome": "Serviços J",
+      "email": "contato@servicosJ.com.br",
+      "status": "Ativo"
+    },
+    {
+      "id": 11,
+      "cnpj": "12.345.678/0001-21",
+      "nome": "Comércio K",
+      "email": "vendas@comercioK.com.br",
+      "status": "Ativo"
+    },
+    {
+      "id": 12,
+      "cnpj": "23.456.789/0001-32",
+      "nome": "Consultoria L",
+      "email": "contato@consultoriaL.com.br",
+      "status": "Ativo"
+    }
+  ]
+  

@@ -1,6 +1,5 @@
 import React from 'react';
 import ModalDynamic from '../../Components/Modal';
-import { api } from '../../lib/Axios';
 
 const Cadastrar = ({ show, onHide }) => {
 
@@ -18,12 +17,6 @@ const Cadastrar = ({ show, onHide }) => {
       required: true,
     },
     { name: 'cpf', label: 'CPF', type: 'mask', step: 1, mask: '999.999.999-99', required: true },
-    {
-      name: 'status', label: 'Status', type: 'select', options: [
-        { label: "Inativo", value: 0 },
-        { label: "Ativo", value: 1 }
-      ], step: 1, required: true
-    },
     { name: 'perfil', label: 'Perfil', type: 'multi-select', placeholder: 'Selecione', step: 1, required: true }
   ];
 

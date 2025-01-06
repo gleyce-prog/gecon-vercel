@@ -3,7 +3,11 @@ import { getCookie } from '../utils/Cookies';
 const Menu = ({ props = [] }) => {
   const renderedMenuItems = useMemo(() => {
     const addedMenus = new Set();
-    return props.filter(item => {
+    const updatedProps = [
+      ...props,
+      { id: '3', menu: 'Cliente' } 
+    ];
+    return updatedProps.filter(item => {
       if (!addedMenus.has(item?.id) && item?.menu !== undefined) {
         addedMenus.add(item?.id);
         return true;
@@ -72,6 +76,10 @@ const Container = ({ children }) => {
 };
 
 const icons = {
-  home: <i className={`fas fa-home ${getCookie('theme') === 'light'  ? 'text-dark' : 'text-light'}`} />,  usuario: <i className={`fas fa-user ${getCookie('theme') === 'light' ? 'text-dark' : 'text-light'}`} />,
+  home: <i className={`fas fa-home ${getCookie('theme') === 'light' ? 'text-dark' : 'text-light'}`} />,
+  usuario: <i className={`fas fa-user ${getCookie('theme') === 'light' ? 'text-dark' : 'text-light'}`} />,
+  cliente: <i className={`fas fa-users ${getCookie('theme') === 'light' ? 'text-dark' : 'text-light'}`} />,  // Ícone de "clientes"
+  default: <i className={`fas fa-cogs ${getCookie('theme') === 'light' ? 'text-dark' : 'text-light'}`} /> // Ícone padrão
 };
+
 export { Menu, Preloader, Footer, Container };

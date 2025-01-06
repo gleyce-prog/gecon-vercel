@@ -286,9 +286,9 @@ const DynamicModal = ({ show, onHide, fields, post, get, onSubmit, title }) => {
                           placeholder={field.placeholder}
                           disabled={field.disabled}
                           name={field.name}
+                          title={field.title}
                           className={`form-control ${field.disabled ? 'disabled' : ''}`}
                           required={field.required}
-                          title={field.title}
                           style={{ borderRadius: '0.25rem', padding: '0.375rem 0.75rem' }}
                         />
                       ) : (

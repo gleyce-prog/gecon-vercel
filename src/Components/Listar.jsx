@@ -120,7 +120,7 @@ const fetchData = (setData, setFilteredData, setOriginalData, currentPage, items
   }
 };
 
-const TableComponent = ({ apiUrl, columns, title, ModalComponents, dados, showHeader = true, showPagination = true }) => {
+const TableComponent = ({ apiUrl, columns, title, ModalComponents, button,  dados, showHeader = true, showPagination = true }) => {
   const [originalData, setOriginalData] = useState([]); // Novo estado para dados originais
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
@@ -145,13 +145,13 @@ const TableComponent = ({ apiUrl, columns, title, ModalComponents, dados, showHe
   const handleSearchChange = (event) => {
     const term = event.target.value.trim();
     setSearchTerm(term);
-    handleSearch(originalData, term, setFilteredData, setCurrentPage); // Use os dados originais
+    handleSearch(originalData, term, setFilteredData, setCurrentPage); 
   };
 
   const resetFilters = () => {
-    setFilteredData(originalData); // Resetar para os dados originais
+    setFilteredData(originalData); 
     setCurrentPage(1);
-    setSearchTerm(''); // Limpar o termo de pesquisa
+    setSearchTerm(''); 
   };
 
   const sortedData = sortData(filteredData, sortColumn, sortDirection);
@@ -188,7 +188,7 @@ const TableComponent = ({ apiUrl, columns, title, ModalComponents, dados, showHe
               <h4 className="card-title">Listar {title.concat("s")}</h4>
             </div>
             <div className="d-flex align-items-center">
-              <Buttons variant="primary" onClick={() => handleShowModal(0)} rota={`/${normalizeString(title)}-cadastrar`} type={'cadastrar'} title={title} />
+              <Buttons variant="primary" onClick={() => ModalComponents ? handleShowModal(0) : window.location.href = button[0]} rota={`/${normalizeString(title)}-cadastrar`} type={'cadastrar'} title={title} />
             </div>
           </div>
           {showHeader && (

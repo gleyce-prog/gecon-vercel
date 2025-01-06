@@ -9,6 +9,9 @@ import AlterarSenha from '../Pages/Alterar_senha.jsx';
 import PaginaErro from '../Pages/Erro/Pagina_nao_encontrada.jsx';
 import Home from '../Components/Comum/Dashboard.jsx';
 import { getBasenameInLocalStorage } from "./getBasename.js";
+import Cadastrar from '../Pages/Cliente/Cadastrar.jsx';
+import CadastrarSocio from '../Pages/Socio/Cadastrar.jsx';
+import Container from '../Components/Comum/Container.jsx';
 const addCssLink = (href) => {
     const link = document.createElement('link');
     link.rel = 'stylesheet';
@@ -86,29 +89,31 @@ export const routes = [
     {
         path: "/socio-pesquisar",
         type: "protected",
-        key: 3
+        key: 2
     },
     {
         path: "/socio-cadastrar",
+        element: <Layout children={<Container children={<CadastrarSocio />} title={"Cadastro de Sócios"}/>}  title={'Sócios'} />,
         type: "protected",
-        key: 3
+        key: 2
     },
     {
         path: "/cliente",
-        element: <Layout children={<ListarCliente />} title={'Usuários'} />,
+        element: <Layout children={<ListarCliente /> } title={'Clientes'} />,
         type: "protected",
-        key: 3,
+        key: 2,
         css: [],
     },
     {
         path: "/cliente-cadastrar",
+        element: <Layout children={<Container children={<Cadastrar /> } title={"Cadastro de Cliente"}/>} title={'Cliente'} />,
         type: "protected",
-        key: 3
+        key: 2
     },
     {
         path: "/cliente-pesquisar",
         type: "protected",
-        key: 3
+        key: 2
     },
     {
         path: "/cliente-inativar",
@@ -118,7 +123,7 @@ export const routes = [
     {
         path: "/cliente-ativar",
         type: "protected",
-        key: 3
+        key: 2
     },
 ]
 

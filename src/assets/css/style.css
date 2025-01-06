@@ -31800,3 +31800,17 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 #icon-theme-title {
   padding-right: 10px;
 }
+
+
+/* Adicionar um estilo personalizado para os inputs com máscara */
+.ant-input {
+  font-size: 14px;  /* Fonte semelhante aos inputs do Ant Design */
+  padding: 0 11px;  /* Padroniza o padding */
+  height: 32px;  /* Alinha o input com a altura dos outros campos */
+}
+
+/* Caso precise de um estilo adicional para a borda ou foco */
+.ant-input:focus {
+  border-color: #40a9ff;  /* Cor de foco do Ant Design */
+  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);  /* Sombras de foco */
+}
